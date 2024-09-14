@@ -1,7 +1,9 @@
 :root {
   --primary-color: #b4edd8;
   --secondary-color: #041f4a;
-  --primary-gradient-color: #f4f4f4;
+  --tertiary-color: #B1ABAB;
+  --gradient-start: #B4EDD8;
+  --gradient-end: #21D1E9;
   --font-size: 16px;
 
   /* Breakpoints */

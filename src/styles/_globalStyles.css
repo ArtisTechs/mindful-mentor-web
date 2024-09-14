@@ -1,0 +1,95 @@
+/* colors */
+.primary-color {
+  color: var(--primary-color);
+}
+
+.secondary-color {
+  color: var(--secondary-color);
+}
+
+.gradient-color {
+  color: linear-gradient(to bottom, var(--gradient-start), var(--gradient-end));
+}
+
+/* background colors */
+.background-white {
+  background-color: white;
+}
+
+.gradient-background {
+  background: linear-gradient(
+    to bottom,
+    var(--gradient-start),
+    var(--gradient-end)
+  );
+}
+
+/* text */
+.text-black {
+  color: black;
+}
+
+.gradient-color-text {
+  background: linear-gradient(
+    to bottom,
+    var(--gradient-start),
+    var(--gradient-end)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+}
+
+.logo-large {
+  width: 100px;
+  height: 100px;
+  background-image: url("../assets/img/mindful-mentor-logo.png");
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* shadow */
+.shadow-black {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+.shadow-white {
+  box-shadow: 0 4px 10px rgb(255, 255, 255);
+}
+
+/* buttons */
+
+.primary-button {
+  background: var(--primary-color);
+  height: 42px;
+  width: 150px;
+  border-radius: 25px;
+  color: black;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.secondary-button {
+  background: var(--tertiary-color);
+  height: 42px;
+  width: 150px;
+  border-radius: 25px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* inputs */
+.primary-input{
+  width: 350px;
+  border-radius: 25px;
+}
+
+.primary-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px 2px var(--primary-color);
+}
+
+.error-input-text {
+  font-size: 14px;
+  font-style: italic;
+}
