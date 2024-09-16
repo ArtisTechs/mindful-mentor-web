@@ -3,11 +3,15 @@ import {
   validateEmail,
   validateStudentNumber,
   validatePhoneNumber,
+  toastService,
+  ESuccessMessages,
+  validatePassword,
+  EErrorMessages,
 } from "../../shared";
 import "./login-page.css";
 import IntroCarouselComponent from "../../components/intro-carousel/intro-carousel";
 
-const LoginPage = () => {
+const LoginPage = ({ setFullLoadingHandler }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -48,6 +52,8 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setFullLoadingHandler(true); // Show loader
+
     let formIsValid = true;
     let newErrors = {
       email: "",
@@ -64,80 +70,91 @@ const LoginPage = () => {
       if (formStep === 1) {
         // Step 1 validation
         if (!formData.firstName) {
-          newErrors.firstName = "First name is required";
-          formIsValid = false;
-        }
-        if (!formData.middleName) {
-          newErrors.middleName = "Middle name is required";
+          newErrors.firstName = EErrorMessages.FIRST_NAME_REQUIRED;
           formIsValid = false;
         }
         if (!formData.lastName) {
-          newErrors.lastName = "Last name is required";
+          newErrors.lastName = EErrorMessages.LAST_NAME_REQUIRED;
           formIsValid = false;
         }
         if (!formData.studentNumber) {
-          newErrors.studentNumber = "Student number is required";
+          newErrors.studentNumber = EErrorMessages.STUDENT_NUMBER_REQUIRED;
           formIsValid = false;
         } else if (!validateStudentNumber(formData.studentNumber)) {
-          newErrors.studentNumber = "Student number is not valid";
+          newErrors.studentNumber = EErrorMessages.STUDENT_NUMBER_INVALID;
           formIsValid = false;
         }
         if (!formData.phoneNumber) {
-          newErrors.phoneNumber = "Phone number is required";
+          newErrors.phoneNumber = EErrorMessages.PHONE_NUMBER_REQUIRED;
           formIsValid = false;
         } else if (!validatePhoneNumber(formData.phoneNumber)) {
-          newErrors.phoneNumber = "Phone number is not valid";
+          newErrors.phoneNumber = EErrorMessages.PHONE_NUMBER_INVALID;
           formIsValid = false;
         }
       } else if (formStep === 2) {
         // Step 2 validation
         if (!formData.email) {
-          newErrors.email = "Email is required";
+          newErrors.email = EErrorMessages.EMAIL_REQUIRED;
           formIsValid = false;
         } else if (!validateEmail(formData.email)) {
-          newErrors.email = "Email is not valid";
+          newErrors.email = EErrorMessages.EMAIL_INVALID;
           formIsValid = false;
         }
         if (!formData.password) {
-          newErrors.password = "Password is required";
+          newErrors.password = EErrorMessages.PASSWORD_REQUIRED;
           formIsValid = false;
         }
         if (formData.password !== formData.reEnterPassword) {
-          newErrors.reEnterPassword = "Passwords do not match";
+          newErrors.reEnterPassword = EErrorMessages.PASSWORD_NOT_MATCH;
+          formIsValid = false;
+        }
+        const passwordError = validatePassword(formData.password);
+        if (passwordError) {
+          newErrors.password = passwordError;
           formIsValid = false;
         }
       }
 
       if (formIsValid) {
         if (formStep === 1) {
-          setFormStep(2); // Move to the next step
+          setFormStep(2);
         } else {
-          console.log("Form submitted:", formData);
-          // Perform form validation or send data to an API
+          // Simulate a form submission delay (e.g., API call)
+          setTimeout(() => {
+            console.log("Form submitted:", formData);
+            toastService.show(ESuccessMessages.REGISTER, "success-toast");
+            setFullLoadingHandler(false); // Hide loader
+          }, 2000); // Simulate 2s loading delay
         }
       } else {
         setErrors(newErrors);
+        setFullLoadingHandler(false); // Hide loader on validation error
       }
     } else {
       // Handle Sign In submission
       if (!formData.email) {
-        newErrors.email = "Email is required";
+        newErrors.email = EErrorMessages.EMAIL_REQUIRED;
         formIsValid = false;
       } else if (!validateEmail(formData.email)) {
-        newErrors.email = "Email is not valid";
+        newErrors.email = EErrorMessages.EMAIL_INVALID;
         formIsValid = false;
       }
 
       if (!formData.password) {
-        newErrors.password = "Password is required";
+        newErrors.password = EErrorMessages.PASSWORD_REQUIRED;
         formIsValid = false;
       }
 
       if (formIsValid) {
-        console.log("Login form submitted:", formData);
-        // Perform login validation or send data to an API
+        // Simulate a form submission delay (e.g., API call)
+        setTimeout(() => {
+          console.log("Login form submitted:", formData);
+          toastService.show(ESuccessMessages.LOGIN, "success-toast");
+          setFullLoadingHandler(false);
+        }, 2000);
       } else {
         setErrors(newErrors);
+        setFullLoadingHandler(false);
       }
     }
   };
@@ -226,9 +243,7 @@ const LoginPage = () => {
                   value={formData.middleName}
                   onChange={handleChange}
                 />
-                <label htmlFor="middleName">
-                  Middle Name<span className="text-danger">*</span>
-                </label>
+                <label htmlFor="middleName">Middle Name</label>
                 {errors.middleName && (
                   <div className="text-danger error-input-text">
                     {errors.middleName}
@@ -426,9 +441,7 @@ const LoginPage = () => {
               {isSignUp ? "Back to Sign In" : "Sign Up"}
             </button>
             <p className="fs-small mt-2">
-              {isSignUp
-                ? "Already have an account?"
-                : "Don't have an account?"}
+              {isSignUp ? "Already have an account?" : "Don't have an account?"}
             </p>
           </div>
         </form>

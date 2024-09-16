@@ -93,3 +93,20 @@
   font-size: 14px;
   font-style: italic;
 }
+
+
+/* toast */
+.success-toast {
+  background: var(--primary-color);
+  color: green;
+}
+
+.danger-toast {
+  background: var(--danger-color);
+  color: red;
+}
+
+.warning-toast {
+  background: var(--warning-color);
+  color: black;
+}
