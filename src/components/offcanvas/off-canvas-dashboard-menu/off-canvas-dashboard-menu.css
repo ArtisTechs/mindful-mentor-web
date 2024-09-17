@@ -1,0 +1,35 @@
+.dashboard-menu {
+  background: var(--primary-color);
+}
+
+.arrow-close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  color: var(--secondary-color); /* Adjust this color as needed */
+}
+
+.arrow-close-btn:hover {
+  color: #007bff; /* Change color on hover */
+}
+
+.dashbaord-menu-item {
+  width: 300px;
+  height: 40px;
+  margin-top: 20px;
+  border-radius: 10px;
+  color: black;
+  background-color: var(--primary-color);
+  border: none;
+}
+
+.dashbaord-menu-item:hover,
+.dashbaord-menu-item:active {
+  color: white;
+  background-color: var(--dark-primary-color);
+  font-weight: bold;
+}

@@ -2,11 +2,15 @@
 import React from "react";
 import "./navbar.component.css";
 
-const Navbar = ({ title }) => {
+const Navbar = ({ title, toggleOffCanvas }) => {
   return (
     <nav className="navbar gradient-background shadow-black">
       <div className="navbar-left">
-        <button className="navbar-toggler" type="button">
+        <button
+          className="navbar-toggler"
+          type="button"
+          onClick={toggleOffCanvas}
+        >
           <i className="bi bi-list"></i>
         </button>
       </div>
