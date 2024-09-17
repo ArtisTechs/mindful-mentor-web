@@ -1,0 +1,38 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 90vh;
+  padding: 4rem 8rem 0 8rem;
+}
+
+.emotion-picker-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 1024px) {
+  .home-page {
+    padding: 3rem 4rem 0 4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-page {
+    padding: 2rem 2rem 0 2rem;
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page {
+    padding: 1rem;
+    height: auto;
+  }
+
+  .emotion-picker-container {
+    flex-direction: column;
+    margin-bottom: 16px;
+  }
+}
