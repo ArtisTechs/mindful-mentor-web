@@ -1,7 +1,5 @@
 .upcoming-events-container {
   width: 400px;
-  min-height: 200px;
-  max-height: 350px;
   border-radius: 20px;
   padding: 1rem;
   background: var(--primary-color);
@@ -16,7 +14,8 @@
 
 .upcoming-events-list {
   overflow: auto;
-  max-height: 250px;
+  min-height: 200px;
+  max-height: 350px;
 }
 
 .upcoming-events-container h1 {

@@ -4,6 +4,7 @@ import "./dashboard-page.css";
 import Navbar from "../../components/navbar/navbar.component";
 import OffCanvasDashboardMenu from "../../components/offcanvas/off-canvas-dashboard-menu/off-canvas-dashboard-menu";
 import HomePage from "../home-page/home-page";
+import ProfilePage from "../profile-page/profile-page";
 
 const DashboardPage = () => {
   const [pageTitle, setPageTitle] = useState("Dashboard");
@@ -19,7 +20,8 @@ const DashboardPage = () => {
         <Navbar title={pageTitle} toggleOffCanvas={handleToggleOffCanvas} />
       </div>
       <div className="dashboard-content">
-        <HomePage />
+        {/* <HomePage /> */}
+        <ProfilePage />
       </div>
       <OffCanvasDashboardMenu
         show={showOffCanvas}

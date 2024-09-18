@@ -35,9 +35,8 @@
   align-items: center;
 }
 
-.profile-icon {
-  font-size: 1.8rem;
-  cursor: pointer;
+.profile-btn {
+  border: none;
 }
 
 /* Mobile responsiveness */

@@ -1,6 +1,7 @@
 // components/navbar/Navbar.js
 import React from "react";
 import "./navbar.component.css";
+import { Avatar } from "@mui/material";
 
 const Navbar = ({ title, toggleOffCanvas }) => {
   return (
@@ -23,12 +24,12 @@ const Navbar = ({ title, toggleOffCanvas }) => {
         <div className="btn-group">
           <button
             type="button"
-            className="btn dropdown-toggle"
+            className="btn profile-btn"
             data-bs-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
           >
-            <i className="bi bi-person-circle profile-icon"></i>
+            <Avatar alt="John Doe" sx={{ width: 35, height: 35 }} />
           </button>
 
           <ul className="dropdown-menu dropdown-menu-end">

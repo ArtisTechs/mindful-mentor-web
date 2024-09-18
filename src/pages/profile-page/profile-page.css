@@ -1,0 +1,45 @@
+.profile-page {
+  width: 100%;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.profile-container {
+  background: var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  width: 50%;
+  border-radius: 20px;
+  position: relative;
+}
+
+.profile-avatar {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  top: 0;
+}
+
+.edit-profile-button {
+  position: absolute;
+  right: 30px;
+  top: 10%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.profile-details {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 15%;
+  padding: 1.5rem;
+}

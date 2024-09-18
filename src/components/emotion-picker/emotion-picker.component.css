@@ -1,20 +1,24 @@
 .emotion-picker {
   width: 80%;
+  max-width: 1200px; /* Prevents the container from getting too wide */
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
+  padding: 20px; /* Adds padding for spacing */
 }
 
 .emotion-picker h1 {
-  font-size: x-large;
+  font-size: 2rem; /* Larger font for heading */
   margin-bottom: 2rem;
 }
 
 .emotion-list {
   display: flex;
   justify-content: center;
-  gap: 40px;
+  flex-wrap: wrap; /* Allows icons to wrap on smaller screens */
+  gap: 30px;
 }
 
 .emotion-btn {
@@ -28,8 +32,9 @@
 }
 
 .emotion-image {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  max-width: 100px;
+  height: auto;
   border-radius: 20px;
   display: block;
   margin: 0 auto;
@@ -45,4 +50,36 @@
 .selected {
   transform: scale(1.2);
   font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .emotion-picker h1 {
+    font-size: 1.5rem;
+  }
+
+  .emotion-list {
+    gap: 15px;
+  }
+
+  .emotion-image {
+    max-width: 80px; /* Smaller icon size on tablets */
+  }
+
+  .emotion-name {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .emotion-picker h1 {
+    font-size: 1.2rem;
+  }
+
+  .emotion-image {
+    max-width: 60px; /* Smaller icon size on mobile */
+  }
+
+  .emotion-name {
+    font-size: 0.8rem;
+  }
 }
