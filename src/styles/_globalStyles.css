@@ -85,6 +85,25 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.white-button {
+  background: white;
+  height: 42px;
+  width: 150px;
+  border-radius: 25px;
+  color: black;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.white-button:hover {
+  background: rgb(209, 209, 209);
+}
+
 /* inputs */
 .primary-input {
   width: 350px;

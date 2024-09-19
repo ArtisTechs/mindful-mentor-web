@@ -1,9 +1,22 @@
-// components/navbar/Navbar.js
 import React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 import "./navbar.component.css";
 import { Avatar } from "@mui/material";
+import { ROUTES, stringAvatar } from "../../shared";
 
-const Navbar = ({ title, toggleOffCanvas }) => {
+const Navbar = ({ title, toggleOffCanvas, onLogout, profile }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    if (onLogout) {
+      onLogout();
+    }
+  };
+
+  const handleProfileClick = () => {
+    navigate(`${ROUTES.WEB}${ROUTES.PROFILE}`); // Use navigate for programmatic navigation
+  };
+
   return (
     <nav className="navbar gradient-background shadow-black">
       <div className="navbar-left">
@@ -29,20 +42,31 @@ const Navbar = ({ title, toggleOffCanvas }) => {
             aria-haspopup="true"
             aria-expanded="false"
           >
-            <Avatar alt="John Doe" sx={{ width: 35, height: 35 }} />
+            <Avatar
+              {...stringAvatar(
+                `${profile.firstName}`,
+                `${profile.lastName}`,
+                35,
+                16
+              )}
+              alt={`${profile.firstName} ${profile.lastName}`}
+            />
           </button>
 
           <ul className="dropdown-menu dropdown-menu-end">
             <li>
-              <a className="dropdown-item" href="#">
+              <button
+                className="dropdown-item"
+                onClick={handleProfileClick} // Use button to handle navigation
+              >
                 Profile
-              </a>
+              </button>
             </li>
             <li>
               <div className="dropdown-divider"></div>
             </li>
             <li>
-              <a className="dropdown-item" href="#">
+              <a className="dropdown-item" onClick={handleLogout}>
                 Logout
               </a>
             </li>

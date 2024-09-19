@@ -36,7 +36,6 @@ export const validatePassword = (password) => {
   }
 };
 
-
 // Toast service
 class ToastService {
   constructor() {
@@ -55,3 +54,45 @@ class ToastService {
 }
 
 export const toastService = new ToastService();
+
+// for avatar
+// src/utils/avatarUtils.js
+
+export function stringToColor(string) {
+  let hash = 0;
+  for (let i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = "#";
+  for (let i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  return color;
+}
+
+export function stringAvatar(firstName, lastName, size, fontSize) {
+  // Extract the first word of the firstName and lastName
+  const firstNameFirstWord = (firstName || "").split(" ")[0];
+  const lastNameFirstWord = (lastName || "").split(" ")[0];
+
+  // Combine first and last names to create the name string
+  const name = `${firstNameFirstWord || ""} ${lastNameFirstWord || ""}`.trim();
+
+  // Generate initials from the first letters of the first words
+  const initials = `${
+    firstNameFirstWord ? firstNameFirstWord[0].toUpperCase() : ""
+  }${lastNameFirstWord ? lastNameFirstWord[0].toUpperCase() : ""}`;
+
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+      width: size,
+      height: size,
+      fontSize: fontSize,
+    },
+    children: initials || "N/A",
+    alt: `${firstName || ""} ${lastName || ""}`,
+  };
+}

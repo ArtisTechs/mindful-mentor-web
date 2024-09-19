@@ -14,7 +14,7 @@
 }
 
 .arrow-close-btn:hover {
-  color: #007bff; /* Change color on hover */
+  color: white; /* Change color on hover */
 }
 
 .dashbaord-menu-item {
@@ -28,7 +28,8 @@
 }
 
 .dashbaord-menu-item:hover,
-.dashbaord-menu-item:active {
+.dashbaord-menu-item:active,
+.dashbaord-menu-item:focus {
   color: white;
   background-color: var(--dark-primary-color);
   font-weight: bold;

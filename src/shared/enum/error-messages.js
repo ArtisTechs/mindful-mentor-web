@@ -11,4 +11,6 @@ export const EErrorMessages = Object.freeze({
   STUDENT_NUMBER_INVALID: "Student number is not valid.",
   PASSWORD_REQUIRED: "Password is required.",
   PASSWORD_NOT_MATCH: "Password is required.",
+  PASSWORD_INCORRECT: "Password is incorrect.",
+  EMAIL_UNREGISTERED: "Email is not registered.",
 });

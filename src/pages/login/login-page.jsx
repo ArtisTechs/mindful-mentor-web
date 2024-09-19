@@ -7,11 +7,12 @@ import {
   ESuccessMessages,
   validatePassword,
   EErrorMessages,
+  STORAGE_KEY,
 } from "../../shared";
 import "./login-page.css";
 import IntroCarouselComponent from "../../components/intro-carousel/intro-carousel";
 
-const LoginPage = ({ setFullLoadingHandler }) => {
+const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -118,17 +119,29 @@ const LoginPage = ({ setFullLoadingHandler }) => {
       if (formIsValid) {
         if (formStep === 1) {
           setFormStep(2);
+          setFullLoadingHandler(false);
         } else {
           // Simulate a form submission delay (e.g., API call)
           setTimeout(() => {
             console.log("Form submitted:", formData);
+
+            const registeredUsers =
+              JSON.parse(localStorage.getItem(STORAGE_KEY.USERS)) || [];
+            const updatedUsers = [...registeredUsers, formData];
+            localStorage.setItem(
+              STORAGE_KEY.USERS,
+              JSON.stringify(updatedUsers)
+            );
+
+            toggleForm();
+
             toastService.show(ESuccessMessages.REGISTER, "success-toast");
-            setFullLoadingHandler(false); // Hide loader
-          }, 2000); // Simulate 2s loading delay
+            setFullLoadingHandler(false);
+          }, 2000);
         }
       } else {
         setErrors(newErrors);
-        setFullLoadingHandler(false); // Hide loader on validation error
+        setFullLoadingHandler(false);
       }
     } else {
       // Handle Sign In submission
@@ -148,8 +161,26 @@ const LoginPage = ({ setFullLoadingHandler }) => {
       if (formIsValid) {
         // Simulate a form submission delay (e.g., API call)
         setTimeout(() => {
-          console.log("Login form submitted:", formData);
-          toastService.show(ESuccessMessages.LOGIN, "success-toast");
+          const registeredUsers =
+            JSON.parse(localStorage.getItem(STORAGE_KEY.USERS)) || [];
+          const user = registeredUsers.find(
+            (user) => user.email === formData.email
+          );
+
+          if (user) {
+            if (user.password === formData.password) {
+              console.log("Login successful:", formData);
+              toastService.show(ESuccessMessages.LOGIN, "success-toast");
+              onLoginSuccess(user);
+            } else {
+              newErrors.password = EErrorMessages.PASSWORD_INCORRECT;
+              setErrors(newErrors);
+            }
+          } else {
+            newErrors.email = EErrorMessages.EMAIL_UNREGISTERED;
+            setErrors(newErrors);
+          }
+
           setFullLoadingHandler(false);
         }, 2000);
       } else {
