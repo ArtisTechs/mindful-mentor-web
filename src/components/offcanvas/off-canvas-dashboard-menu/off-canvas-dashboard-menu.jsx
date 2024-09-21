@@ -52,7 +52,7 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                 Calendar
               </Button>
             </li>
-            <li>
+            {/* <li>
               <Button
                 className="dashbaord-menu-item"
                 onClick={() =>
@@ -61,7 +61,7 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
               >
                 Counselors
               </Button>
-            </li>
+            </li> */}
             <li>
               <Button
                 className="dashbaord-menu-item"

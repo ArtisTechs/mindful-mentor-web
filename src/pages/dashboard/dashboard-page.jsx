@@ -7,6 +7,8 @@ import { ROUTES, STORAGE_KEY } from "../../shared";
 import { Route, Routes } from "react-router-dom";
 import HomePage from "../home-page/home-page";
 import ProfilePage from "../profile-page/profile-page";
+import CalendarPage from "../calendar-page/calendar-page";
+import AppointmentPage from "../appointment-page/appointment-page";
 
 const DashboardPage = ({ onLogout }) => {
   const [pageTitle, setPageTitle] = useState("Dashboard");
@@ -19,9 +21,8 @@ const DashboardPage = ({ onLogout }) => {
   const routeTitles = {
     [`${ROUTES.WEB}${ROUTES.DASHBOARD}`]: "Dashboard",
     [`${ROUTES.WEB}${ROUTES.PROFILE}`]: "Profile",
-    // "/web/calendar": "Calendar",
-    // "/web/counselors": "Counselors",
-    // "/web/appointment": "Appointment",
+    [`${ROUTES.WEB}${ROUTES.CALENDAR}`]: "Calendar",
+    [`${ROUTES.WEB}${ROUTES.APPOINTMENTS}`]: "Calendar",
   };
 
   // Update page title based on the current route
@@ -47,12 +48,14 @@ const DashboardPage = ({ onLogout }) => {
         <Routes>
           <Route path={ROUTES.DASHBOARD} element={<HomePage />} />
           <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
-          {/* <Route path="/web/calendar" element={<CalendarPage />} />
-          <Route path="/web/counselors" element={<CounselorsPage />} />
-          <Route path="/web/appointment" element={<AppointmentPage />} /> */}
+          <Route path={ROUTES.CALENDAR} element={<CalendarPage />} />
+          <Route path={ROUTES.APPOINTMENTS} element={<AppointmentPage />} />
           {/* Add routes for any other sub-pages under /web */}
         </Routes>
       </div>
+      <button className="chat-head gradient-background shadow">
+        <i className="far fa-message"></i>
+      </button>
       <OffCanvasDashboardMenu
         show={showOffCanvas}
         handleClose={handleToggleOffCanvas}

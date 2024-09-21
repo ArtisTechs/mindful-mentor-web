@@ -1,12 +1,13 @@
 :root {
   --primary-color: #b4edd8;
   --secondary-color: #041f4a;
-  --tertiary-color: #B1ABAB;
+  --tertiary-color: #b1abab;
   --danger-color: #ff6f6f;
   --warning-color: #ffe56f;
-  --gradient-start: #B4EDD8;
-  --gradient-end: #21D1E9;
-  --dark-primary-color: #769F90;
+  --gradient-start: #b4edd8;
+  --gradient-end: #21d1e9;
+  --dark-primary-color: #769f90;
+  --dark-tertiary-color: #5b5959;
   --font-size: 16px;
 
   /* Breakpoints */

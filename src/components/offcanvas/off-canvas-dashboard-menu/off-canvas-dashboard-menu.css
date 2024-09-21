@@ -30,7 +30,7 @@
 .dashbaord-menu-item:hover,
 .dashbaord-menu-item:active,
 .dashbaord-menu-item:focus {
-  color: white;
-  background-color: var(--dark-primary-color);
-  font-weight: bold;
+  color: white !important;
+  background-color: var(--dark-primary-color) !important;
+  font-weight: bold !important;
 }
