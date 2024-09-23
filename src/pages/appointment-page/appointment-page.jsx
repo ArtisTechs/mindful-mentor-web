@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Form } from "react-bootstrap";
+import { Form, Toast } from "react-bootstrap";
 import "./appointment-page.css";
 import { Avatar } from "@mui/material";
-import { stringAvatar } from "../../shared";
+import {
+  EErrorMessages,
+  ESuccessMessages,
+  STORAGE_KEY,
+  stringAvatar,
+  toastService,
+} from "../../shared";
 import DatePicker from "../../components/date-picker/date-picker.component";
 
 const AppointmentPage = () => {
@@ -17,15 +23,6 @@ const AppointmentPage = () => {
 
   const [selectedDate, setSelectedDate] = useState("");
   const [reason, setReason] = useState("");
-  const [appointments, setAppointments] = useState([]);
-
-  // Load saved appointments from localStorage when the component mounts
-  useEffect(() => {
-    const savedAppointments = localStorage.getItem("appointments");
-    if (savedAppointments) {
-      setAppointments(JSON.parse(savedAppointments));
-    }
-  }, []);
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
@@ -38,24 +35,33 @@ const AppointmentPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Create a new appointment object
-    const newAppointment = {
-      date: selectedDate,
-      reason: reason,
-    };
+    const savedAppointments =
+      JSON.parse(localStorage.getItem(STORAGE_KEY.APPOINTMENTS)) || [];
 
-    // Update the list of appointments
-    const updatedAppointments = [...appointments, newAppointment];
+    const appointmentExists = savedAppointments.some(
+      (appointment) => appointment.date === selectedDate
+    );
 
-    // Save the updated list of appointments to localStorage
-    localStorage.setItem("appointments", JSON.stringify(updatedAppointments));
+    if (appointmentExists) {
+      toastService.show(EErrorMessages.APPOINTMENT_DUPLICATE, "danger-toast");
+    } else {
+      const newAppointment = {
+        date: selectedDate,
+        reason: reason,
+      };
 
-    // Update the state to reflect the new appointment
-    setAppointments(updatedAppointments);
+      const updatedAppointments = [...savedAppointments, newAppointment];
 
-    // Clear the form inputs after saving
-    setSelectedDate("");
-    setReason("");
+      localStorage.setItem(
+        STORAGE_KEY.APPOINTMENTS,
+        JSON.stringify(updatedAppointments)
+      );
+
+      toastService.show(ESuccessMessages.APPOINTMENT, "success-toast");
+
+      setSelectedDate("");
+      setReason("");
+    }
   };
 
   return (
@@ -72,9 +78,9 @@ const AppointmentPage = () => {
             src={counselor.avatar}
           />
           <div className="counselor-details">
-            <h3>{`${counselor.firstName} ${counselor.lastName}`}</h3>
-            <p>Counselor</p>
-            <p className="available-schedule">
+            <h3 className="mb-0">{`${counselor.firstName} ${counselor.lastName}`}</h3>
+            <p className="mb-0">Counselor</p>
+            <p className="available-schedule mb-0">
               Available Schedule: <strong>{counselor.availableSchedule}</strong>
             </p>
           </div>

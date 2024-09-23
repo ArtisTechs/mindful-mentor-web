@@ -133,7 +133,7 @@
 
 .danger-toast {
   background: var(--danger-color);
-  color: red;
+  color: white;
 }
 
 .warning-toast {

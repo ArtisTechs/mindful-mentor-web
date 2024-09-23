@@ -9,10 +9,12 @@ import HomePage from "../home-page/home-page";
 import ProfilePage from "../profile-page/profile-page";
 import CalendarPage from "../calendar-page/calendar-page";
 import AppointmentPage from "../appointment-page/appointment-page";
+import ChatWindow from "../../components/chat-window/chat-window.component"; // Import ChatWindow
 
 const DashboardPage = ({ onLogout }) => {
   const [pageTitle, setPageTitle] = useState("Dashboard");
   const [showOffCanvas, setShowOffCanvas] = useState(false);
+  const [showChatWindow, setShowChatWindow] = useState(false); // State to control chat window visibility
   const profileDetails =
     JSON.parse(localStorage.getItem(STORAGE_KEY.PROFILE_DETAILS)) || {};
   const location = useLocation();
@@ -22,7 +24,7 @@ const DashboardPage = ({ onLogout }) => {
     [`${ROUTES.WEB}${ROUTES.DASHBOARD}`]: "Dashboard",
     [`${ROUTES.WEB}${ROUTES.PROFILE}`]: "Profile",
     [`${ROUTES.WEB}${ROUTES.CALENDAR}`]: "Calendar",
-    [`${ROUTES.WEB}${ROUTES.APPOINTMENTS}`]: "Calendar",
+    [`${ROUTES.WEB}${ROUTES.APPOINTMENTS}`]: "Appointments",
   };
 
   // Update page title based on the current route
@@ -32,6 +34,10 @@ const DashboardPage = ({ onLogout }) => {
 
   const handleToggleOffCanvas = () => {
     setShowOffCanvas(!showOffCanvas);
+  };
+
+  const handleToggleChatWindow = () => {
+    setShowChatWindow(!showChatWindow); // Toggle chat window visibility
   };
 
   return (
@@ -50,12 +56,17 @@ const DashboardPage = ({ onLogout }) => {
           <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
           <Route path={ROUTES.CALENDAR} element={<CalendarPage />} />
           <Route path={ROUTES.APPOINTMENTS} element={<AppointmentPage />} />
-          {/* Add routes for any other sub-pages under /web */}
         </Routes>
       </div>
-      <button className="chat-head gradient-background shadow">
+      <button
+        className="chat-head gradient-background shadow"
+        onClick={handleToggleChatWindow}
+      >
         <i className="far fa-message"></i>
       </button>
+
+      {showChatWindow && <ChatWindow onClose={handleToggleChatWindow} />}
+
       <OffCanvasDashboardMenu
         show={showOffCanvas}
         handleClose={handleToggleOffCanvas}
