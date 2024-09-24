@@ -62,8 +62,7 @@ function App() {
   };
 
   return (
-    <Router>
-      {/* Full-screen loader component */}
+    <Router basename={ROUTES.MINDFUL_MENTOR}>
       {isLoading && <FullLoaderComponent isLoading={isLoading} />}
 
       <div className="app">

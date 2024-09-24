@@ -1,4 +1,5 @@
 export const ROUTES = {
+  MINDFUL_MENTOR: "/mindful-mentor-web",
   LOGIN: "/login",
   WEB: "/web",
   DASHBOARD: "/dashboard",
