@@ -1,0 +1,36 @@
+{
+  "files": {
+    "main.css": "/mindful-mentor-web/static/css/main.2e5f94de.css",
+    "main.js": "/mindful-mentor-web/static/js/main.64b25e27.js",
+    "static/js/453.4dd9bd5d.chunk.js": "/mindful-mentor-web/static/js/453.4dd9bd5d.chunk.js",
+    "static/media/carousel-4.png": "/mindful-mentor-web/static/media/carousel-4.0a4a9c23488289663593.png",
+    "static/media/carousel-1.png": "/mindful-mentor-web/static/media/carousel-1.598fd5aa72752f50e313.png",
+    "static/media/carousel-3.png": "/mindful-mentor-web/static/media/carousel-3.97ca819b75fa2fbc3c3c.png",
+    "static/media/carousel-2.png": "/mindful-mentor-web/static/media/carousel-2.1ea2fa36dd60c1358f11.png",
+    "static/media/fa-solid-900.ttf": "/mindful-mentor-web/static/media/fa-solid-900.07ed6d5fa32c1d54af0f.ttf",
+    "static/media/Calm.png": "/mindful-mentor-web/static/media/Calm.8e3c09951a27688b3ce6.png",
+    "static/media/Anxious.png": "/mindful-mentor-web/static/media/Anxious.c90f29463438ea5727e5.png",
+    "static/media/Sad.png": "/mindful-mentor-web/static/media/Sad.9bd6ca1e54df321f1f74.png",
+    "static/media/Motivated.png": "/mindful-mentor-web/static/media/Motivated.0a8dc01f96cd1a59a324.png",
+    "static/media/Frustrated.png": "/mindful-mentor-web/static/media/Frustrated.8c7db2a3b557c2ed24d5.png",
+    "static/media/Joyful.png": "/mindful-mentor-web/static/media/Joyful.1291afa13538115f73e3.png",
+    "static/media/fa-brands-400.ttf": "/mindful-mentor-web/static/media/fa-brands-400.0ff70dcbf135d859ebf3.ttf",
+    "static/media/bootstrap-icons.woff?": "/mindful-mentor-web/static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
+    "static/media/fa-solid-900.woff2": "/mindful-mentor-web/static/media/fa-solid-900.93f719f4d62bfa3e748c.woff2",
+    "static/media/bootstrap-icons.woff2?": "/mindful-mentor-web/static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
+    "static/media/fa-brands-400.woff2": "/mindful-mentor-web/static/media/fa-brands-400.bb8d5a145e22822103fb.woff2",
+    "static/media/mindful-mentor-logo.png": "/mindful-mentor-web/static/media/mindful-mentor-logo.4fe4fed52666e69a8c0b.png",
+    "static/media/fa-regular-400.ttf": "/mindful-mentor-web/static/media/fa-regular-400.17a6e1aebccdbaa39e78.ttf",
+    "static/media/fa-regular-400.woff2": "/mindful-mentor-web/static/media/fa-regular-400.bc3722686635b5f86132.woff2",
+    "static/media/fa-v4compatibility.ttf": "/mindful-mentor-web/static/media/fa-v4compatibility.0f6cb412603527bda691.ttf",
+    "static/media/fa-v4compatibility.woff2": "/mindful-mentor-web/static/media/fa-v4compatibility.6cfec8414be20e2c3426.woff2",
+    "index.html": "/mindful-mentor-web/index.html",
+    "main.2e5f94de.css.map": "/mindful-mentor-web/static/css/main.2e5f94de.css.map",
+    "main.64b25e27.js.map": "/mindful-mentor-web/static/js/main.64b25e27.js.map",
+    "453.4dd9bd5d.chunk.js.map": "/mindful-mentor-web/static/js/453.4dd9bd5d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2e5f94de.css",
+    "static/js/main.64b25e27.js"
+  ]
+}
