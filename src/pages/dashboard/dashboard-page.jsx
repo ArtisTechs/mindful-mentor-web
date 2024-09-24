@@ -14,7 +14,6 @@ import ChatWindow from "../../components/chat-window/chat-window.component"; // 
 const DashboardPage = ({ onLogout }) => {
   const [pageTitle, setPageTitle] = useState("Dashboard");
   const [showOffCanvas, setShowOffCanvas] = useState(false);
-  const [showChatWindow, setShowChatWindow] = useState(false); // State to control chat window visibility
   const profileDetails =
     JSON.parse(localStorage.getItem(STORAGE_KEY.PROFILE_DETAILS)) || {};
   const location = useLocation();
@@ -27,17 +26,12 @@ const DashboardPage = ({ onLogout }) => {
     [`${ROUTES.WEB}${ROUTES.APPOINTMENTS}`]: "Appointments",
   };
 
-  // Update page title based on the current route
   useEffect(() => {
     setPageTitle(routeTitles[location.pathname] || "Dashboard");
   }, [location.pathname]);
 
   const handleToggleOffCanvas = () => {
     setShowOffCanvas(!showOffCanvas);
-  };
-
-  const handleToggleChatWindow = () => {
-    setShowChatWindow(!showChatWindow); // Toggle chat window visibility
   };
 
   return (
@@ -58,14 +52,7 @@ const DashboardPage = ({ onLogout }) => {
           <Route path={ROUTES.APPOINTMENTS} element={<AppointmentPage />} />
         </Routes>
       </div>
-      <button
-        className="chat-head gradient-background shadow"
-        onClick={handleToggleChatWindow}
-      >
-        <i className="far fa-message"></i>
-      </button>
-
-      {showChatWindow && <ChatWindow onClose={handleToggleChatWindow} />}
+      <ChatWindow />
 
       <OffCanvasDashboardMenu
         show={showOffCanvas}

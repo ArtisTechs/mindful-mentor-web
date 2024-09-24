@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./upcoming-events.component.css";
-import { STORAGE_KEY } from "../../shared";
+import { ROUTES, STORAGE_KEY } from "../../shared";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 // Helper function to format the date
 const formatDate = (dateString) => {
@@ -34,6 +35,7 @@ const UpcomingEventsCard = ({ event }) => {
 
 const UpcomingEvents = () => {
   const [events, setEvents] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const savedAppointments =
@@ -47,6 +49,10 @@ const UpcomingEvents = () => {
 
     setEvents(formattedEvents);
   }, []);
+
+  const handleScheduleClick = () => {
+    navigate(`${ROUTES.WEB}${ROUTES.APPOINTMENTS}`);
+  };
 
   return (
     <div className="upcoming-events-container">
@@ -64,7 +70,7 @@ const UpcomingEvents = () => {
         ) : (
           <div className="no-events-message">
             <p>Schedule a personal appointment with a guidance counselor?</p>
-            <button className="schedule-btn">
+            <button className="schedule-btn" onClick={handleScheduleClick}>
               Schedule Now <i className="bi bi-arrow-right"></i>
             </button>
           </div>

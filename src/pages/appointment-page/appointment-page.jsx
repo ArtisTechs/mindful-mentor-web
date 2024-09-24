@@ -108,9 +108,6 @@ const AppointmentPage = () => {
           </Form.Group>
 
           <div className="button-container mb-2">
-            <button className="secondary-button shadow" type="button">
-              Cancel
-            </button>
             <button className="white-button shadow" type="submit">
               Save Schedule
             </button>

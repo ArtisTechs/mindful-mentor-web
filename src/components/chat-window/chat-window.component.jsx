@@ -14,14 +14,13 @@ const counselor = {
   isActive: true,
 };
 
-const ChatWindow = ({ onClose }) => {
-  const [isVisible, setIsVisible] = useState(false);
+const ChatWindow = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const chatBodyRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false); // Track chat visibility
 
   useEffect(() => {
-    setIsVisible(true);
     const savedMessages =
       JSON.parse(localStorage.getItem(STORAGE_KEY.MESSAGES)) || [];
 
@@ -37,16 +36,19 @@ const ChatWindow = ({ onClose }) => {
     setMessages(savedMessages);
   }, []);
 
+  // Scroll to the latest message when messages change
   useEffect(() => {
     if (chatBodyRef.current) {
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
   }, [messages]);
 
-  const handleClose = () => {
-    setIsVisible(false);
-    setTimeout(onClose, 300);
-  };
+  // Scroll to the latest message when the chat window becomes visible
+  useEffect(() => {
+    if (isVisible && chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+    }
+  }, [isVisible]);
 
   const handleSendMessage = () => {
     if (inputValue.trim()) {
@@ -66,6 +68,9 @@ const ChatWindow = ({ onClose }) => {
       handleSendMessage();
     }
   };
+
+  const handleToggle = () => setIsVisible(!isVisible);
+  const handleClose = () => setIsVisible(false); // Explicitly close the popover
 
   const popover = (
     <Popover id="chat-popover">
@@ -121,11 +126,20 @@ const ChatWindow = ({ onClose }) => {
   );
 
   return (
-    <OverlayTrigger trigger="click" placement="left" overlay={popover}>
-      <button className="chat-head gradient-background shadow">
-        <i className="far fa-message"></i>
-      </button>
-    </OverlayTrigger>
+    <>
+      <OverlayTrigger
+        trigger="click"
+        placement="auto"
+        overlay={popover}
+        show={isVisible}
+        onToggle={handleToggle}
+        rootClose
+      >
+        <button className="chat-head gradient-background shadow">
+          <i className="far fa-message"></i>
+        </button>
+      </OverlayTrigger>
+    </>
   );
 };
 

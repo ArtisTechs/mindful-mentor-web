@@ -14,7 +14,6 @@
 
 .upcoming-events-list {
   overflow: auto;
-  min-height: 200px;
   max-height: 350px;
 }
 
@@ -72,4 +71,10 @@
 
 .schedule-btn:hover .bi-arrow-right {
   transform: translateX(5px);
+}
+
+@media (max-width: 480px) {
+  .upcoming-events-container {
+    width: 300px;
+  }
 }

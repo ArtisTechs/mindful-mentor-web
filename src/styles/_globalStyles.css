@@ -125,6 +125,12 @@
   font-style: italic;
 }
 
+@media (max-width: 480px) {
+  .primary-input {
+    width: 280px;
+  }
+}
+
 /* toast */
 .success-toast {
   background: var(--primary-color);

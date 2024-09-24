@@ -48,3 +48,14 @@
   border-radius: 8px;
 }
 
+@media (max-width: 620px) {
+  .appointment-container {
+    width: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .appointment-container {
+    width: 300px;
+  }
+}
