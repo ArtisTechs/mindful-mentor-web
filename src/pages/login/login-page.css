@@ -34,7 +34,7 @@
 
 @media (max-width: 812px) {
   .login-page {
-    flex-direction: column-reverse;
+    flex-direction: column;
     overflow: auto;
     padding: 3rem 0;
   }
@@ -44,10 +44,10 @@
   }
 
   .get-started-container {
-    margin-top: 1rem;
+    margin-top: 18rem;
     width: 500px;
     margin-right: 0;
-    margin-bottom: 10rem;
+    margin-bottom: 3rem;
   }
 }
 
