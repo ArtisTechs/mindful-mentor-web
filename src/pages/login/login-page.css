@@ -47,14 +47,13 @@
     margin-top: 1rem;
     width: 500px;
     margin-right: 0;
+    margin-bottom: 10rem;
   }
 }
 
 @media (max-width: 480px) {
   .login-page {
-    flex-direction: column-reverse;
-    overflow: auto;
-    padding: 3rem 0;
+    padding: 3rem;
   }
 
   .get-started-container {

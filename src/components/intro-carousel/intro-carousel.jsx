@@ -6,7 +6,6 @@ import slideImage4 from "../../assets/img/carousel-4.png";
 import "./intro-carousel.css";
 
 const IntroCarouselComponent = () => {
-
   return (
     <div
       id="carouselExampleIndicators"
@@ -35,27 +34,27 @@ const IntroCarouselComponent = () => {
       <div className="carousel-inner">
         <div className="carousel-item active">
           <img className="d-block w-100" src={slideImage1} alt="First slide" />
-          <div className="carousel-caption d-none d-md-block text-black">
+          <div className="carousel-caption text-black">
             <h5>Welcome!</h5>
           </div>
         </div>
         <div className="carousel-item">
           <img className="d-block w-100" src={slideImage2} alt="Second slide" />
-          <div className="carousel-caption d-none d-md-block text-black">
+          <div className="carousel-caption text-black">
             <h5>Track Your Mood</h5>
             <p>Log your feelings daily using simple emojis.</p>
           </div>
         </div>
         <div className="carousel-item">
           <img className="d-block w-100" src={slideImage3} alt="Third slide" />
-          <div className="carousel-caption d-none d-md-block text-black">
+          <div className="carousel-caption text-black">
             <h5>Live Chat</h5>
             <p>Instantly connect with counselors for real-time support.</p>
           </div>
         </div>
         <div className="carousel-item">
           <img className="d-block w-100" src={slideImage4} alt="Fourth slide" />
-          <div className="carousel-caption d-none d-md-block text-black">
+          <div className="carousel-caption text-black">
             <h5>Appointments</h5>
             <p>Schedule one-on-one sessions with school counselors.</p>
           </div>
