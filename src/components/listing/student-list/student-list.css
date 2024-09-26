@@ -1,0 +1,144 @@
+.student-list-container {
+  border-radius: 20px;
+  padding: 1rem;
+  background: var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Full size */
+.student-list-full {
+  width: 80%;
+  height: 80vh;
+}
+
+.student-list-full h1 {
+  font-size: 24px;
+}
+
+.student-card-full {
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.student-name-full {
+  font-size: 18px;
+}
+
+.emotion-icon-full {
+  width: 40px;
+  height: 40px;
+}
+
+/* Half size */
+.student-list-half {
+  width: 400px;
+  height: 500px;
+}
+
+.student-list-half h1 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.student-card-half {
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+.student-name-half {
+  font-size: 14px;
+}
+
+.emotion-icon-half {
+  width: 30px;
+  height: 30px;
+}
+
+/* Small size */
+.student-list-small {
+  width: 250px;
+  height: 400px;
+}
+
+.student-list-small h1 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.student-card-small {
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.student-name-small {
+  font-size: 12px;
+}
+
+.emotion-icon-small {
+  width: 20px;
+  height: 20px;
+}
+
+.student-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 10px;
+  height: 90vh;
+  overflow: auto;
+}
+
+.student-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.student-info {
+  display: flex;
+  align-items: center;
+}
+
+.student-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.student-name {
+  font-weight: 500;
+}
+
+.emotion-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.student-dropdown-full {
+  position: absolute;
+  left: 60px;
+}
+
+.student-dropdown-half {
+  position: absolute;
+  left: 45px;
+}
+
+.student-dropdown-small {
+  position: absolute;
+  left: 35px;
+}
+
+.student-list-divider {
+  height: 2px;
+  background-color: black;
+  margin: 20px auto;
+  width: 100%;
+}

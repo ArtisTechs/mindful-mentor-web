@@ -8,4 +8,6 @@ export const ROUTES = {
   CALENDAR: "/calendar",
   COUNSELOR: "/counselor",
   APPOINTMENTS: "/appointments",
+  STUDENTS: "/students",
+  CHATS: "/chats",
 };

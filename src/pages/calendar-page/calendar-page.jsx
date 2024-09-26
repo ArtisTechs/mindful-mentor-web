@@ -1,8 +1,11 @@
 import React from "react";
 import "./calendar-page.css";
 import CalendarComponent from "../../components/calendar/calendar.component";
+import { useGlobalContext } from "../../shared/context";
 
 const CalendarPage = () => {
+  const { currentUserDetails, isAppAdmin } = useGlobalContext();
+
   const mockData = [
     {
       id: "1234",
