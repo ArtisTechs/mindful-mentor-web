@@ -15,4 +15,5 @@ export const EErrorMessages = Object.freeze({
   EMAIL_UNREGISTERED: "Email is not registered.",
   APPOINTMENT_DUPLICATE:
     "An appointment on this date already exists. Please select a different date.",
+  DATE_REQUIRED: "Please select a date for your appointment.",
 });

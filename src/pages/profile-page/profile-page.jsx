@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation
 import "./profile-page.css";
 import { Avatar } from "@mui/material";
 import {
@@ -9,13 +10,17 @@ import {
   STORAGE_KEY,
   stringAvatar,
 } from "../../shared";
+import { useGlobalContext } from "../../shared/context";
 
 const ProfilePage = () => {
-  const savedProfile =
-    JSON.parse(localStorage.getItem(STORAGE_KEY.PROFILE_DETAILS)) || null;
+  const location = useLocation();
+  const { student, isViewSelf } = location.state || {};
+  const { currentUserDetails, isAppAdmin } = useGlobalContext();
 
-  // Initialize state with separate name fields
-  const [profile, setProfile] = useState(savedProfile);
+  const [profile, setProfile] = useState(() => {
+    return student || currentUserDetails;
+  });
+
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(profile);
   const [errors, setErrors] = useState({
@@ -30,6 +35,10 @@ const ProfilePage = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    setFormData(profile); // Update form data whenever profile changes
+  }, [profile]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -41,34 +50,56 @@ const ProfilePage = () => {
     let formIsValid = true;
     let newErrors = {};
 
-    if (!formData.firstName) {
-      newErrors.firstName = EErrorMessages.FIRST_NAME_REQUIRED;
-      formIsValid = false;
-    }
-    if (!formData.lastName) {
-      newErrors.lastName = EErrorMessages.LAST_NAME_REQUIRED;
-      formIsValid = false;
-    }
-    if (!formData.email) {
-      newErrors.email = EErrorMessages.EMAIL_REQUIRED;
-      formIsValid = false;
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = EErrorMessages.EMAIL_INVALID;
-      formIsValid = false;
-    }
-    if (!formData.studentNumber) {
-      newErrors.studentNumber = EErrorMessages.STUDENT_NUMBER_REQUIRED;
-      formIsValid = false;
-    } else if (!validateStudentNumber(formData.studentNumber)) {
-      newErrors.studentNumber = EErrorMessages.STUDENT_NUMBER_INVALID;
-      formIsValid = false;
-    }
-    if (!formData.phoneNumber) {
-      newErrors.phoneNumber = EErrorMessages.PHONE_NUMBER_REQUIRED;
-      formIsValid = false;
-    } else if (!validatePhoneNumber(formData.phoneNumber)) {
-      newErrors.phoneNumber = EErrorMessages.PHONE_NUMBER_INVALID;
-      formIsValid = false;
+    if (!isViewSelf) {
+      if (!formData.firstName) {
+        newErrors.firstName = EErrorMessages.FIRST_NAME_REQUIRED;
+        formIsValid = false;
+      }
+      if (!formData.lastName) {
+        newErrors.lastName = EErrorMessages.LAST_NAME_REQUIRED;
+        formIsValid = false;
+      }
+      if (!formData.email) {
+        newErrors.email = EErrorMessages.EMAIL_REQUIRED;
+        formIsValid = false;
+      }
+      if (!formData.studentNumber) {
+        newErrors.studentNumber = EErrorMessages.STUDENT_NUMBER_REQUIRED;
+        formIsValid = false;
+      } else if (!validateStudentNumber(formData.studentNumber)) {
+        newErrors.studentNumber = EErrorMessages.STUDENT_NUMBER_INVALID;
+        formIsValid = false;
+      }
+    } else {
+      if (!formData.firstName) {
+        newErrors.firstName = EErrorMessages.FIRST_NAME_REQUIRED;
+        formIsValid = false;
+      }
+      if (!formData.lastName) {
+        newErrors.lastName = EErrorMessages.LAST_NAME_REQUIRED;
+        formIsValid = false;
+      }
+      if (!formData.email) {
+        newErrors.email = EErrorMessages.EMAIL_REQUIRED;
+        formIsValid = false;
+      } else if (!validateEmail(formData.email)) {
+        newErrors.email = EErrorMessages.EMAIL_INVALID;
+        formIsValid = false;
+      }
+      if (!formData.studentNumber) {
+        newErrors.studentNumber = EErrorMessages.STUDENT_NUMBER_REQUIRED;
+        formIsValid = false;
+      } else if (!validateStudentNumber(formData.studentNumber)) {
+        newErrors.studentNumber = EErrorMessages.STUDENT_NUMBER_INVALID;
+        formIsValid = false;
+      }
+      if (!formData.phoneNumber) {
+        newErrors.phoneNumber = EErrorMessages.PHONE_NUMBER_REQUIRED;
+        formIsValid = false;
+      } else if (!validatePhoneNumber(formData.phoneNumber)) {
+        newErrors.phoneNumber = EErrorMessages.PHONE_NUMBER_INVALID;
+        formIsValid = false;
+      }
     }
 
     if (formIsValid) {
@@ -136,7 +167,12 @@ const ProfilePage = () => {
         <div className="profile-header">
           <div className="profile-avatar">
             <Avatar
-              {...stringAvatar(`${profile.firstName}`, `${profile.lastName}`, 150, 42)}
+              {...stringAvatar(
+                `${profile.firstName}`,
+                `${profile.lastName}`,
+                150,
+                42
+              )}
               src={isEditing ? formData.avatar : profile.avatar}
             />
             {isEditing && (
@@ -244,21 +280,23 @@ const ProfilePage = () => {
                 {renderError("studentNumber")}
               </div>
 
-              <div className="form-floating mb-3">
-                <input
-                  type="text"
-                  className="form-control primary-input"
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  placeholder="Phone Number"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
-                />
-                <label htmlFor="phoneNumber">
-                  Phone Number<span className="text-danger">*</span>
-                </label>
-                {renderError("phoneNumber")}
-              </div>
+              {!isViewSelf && (
+                <>
+                  <div className="form-floating mb-3">
+                    <input
+                      type="tel"
+                      className="form-control primary-input"
+                      id="phoneNumber"
+                      name="phoneNumber"
+                      placeholder="Phone Number"
+                      value={formData.phoneNumber}
+                      onChange={handleInputChange}
+                    />
+                    <label htmlFor="phoneNumber">Phone Number</label>
+                    {renderError("phoneNumber")}
+                  </div>
+                </>
+              )}
 
               <div className="form-floating mb-3 position-relative">
                 <input

@@ -76,6 +76,10 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
+.primary-button:hover {
+  background: var(--dark-primary-color);
+}
+
 .secondary-button {
   background: var(--tertiary-color);
   height: 42px;
@@ -107,6 +111,18 @@
 
 .white-button:hover {
   background: rgb(209, 209, 209);
+}
+
+.ellipsis-btn {
+  width: 10px;
+  height: 20px;
+}
+
+.ellipsis-btn:active,
+.ellipsis-btn:hover,
+.ellipsis-btn:focus {
+  border: none !important;
+  outline: none !important;
 }
 
 /* inputs */

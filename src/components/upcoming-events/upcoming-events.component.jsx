@@ -55,7 +55,7 @@ const UpcomingEvents = () => {
   };
 
   return (
-    <div className="upcoming-events-container">
+    <div className="upcoming-events-container shadow">
       <h1>
         {events && events.length > 0
           ? "Upcoming Appointments"

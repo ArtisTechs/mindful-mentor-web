@@ -7,9 +7,10 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "./off-canvas-dashboard-menu.css";
-import { ROUTES } from "../../../shared";
+import { ROUTES, useGlobalContext } from "../../../shared";
 
 const OffCanvasDashboardMenu = ({ show, handleClose }) => {
+  const { currentUserDetails, isAppAdmin } = useGlobalContext();
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
@@ -52,6 +53,21 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                 Calendar
               </Button>
             </li>
+            {isAppAdmin && (
+              <>
+                <li>
+                  <Button
+                    className="dashbaord-menu-item"
+                    onClick={() =>
+                      handleNavigation(`${ROUTES.WEB}${ROUTES.STUDENTS}`)
+                    }
+                  >
+                    Students
+                  </Button>
+                </li>
+              </>
+            )}
+
             {/* <li>
               <Button
                 className="dashbaord-menu-item"
