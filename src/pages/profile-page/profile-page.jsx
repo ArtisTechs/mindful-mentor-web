@@ -256,6 +256,7 @@ const ProfilePage = () => {
                   name="email"
                   placeholder="Email"
                   value={formData.email}
+                  disabled={isAppAdmin}
                   onChange={handleInputChange}
                 />
                 <label htmlFor="email">
@@ -264,21 +265,23 @@ const ProfilePage = () => {
                 {renderError("email")}
               </div>
 
-              <div className="form-floating mb-3">
-                <input
-                  type="text"
-                  className="form-control primary-input"
-                  id="studentNumber"
-                  name="studentNumber"
-                  placeholder="Student Number"
-                  value={formData.studentNumber}
-                  onChange={handleInputChange}
-                />
-                <label htmlFor="studentNumber">
-                  Student Number<span className="text-danger">*</span>
-                </label>
-                {renderError("studentNumber")}
-              </div>
+              {!isAppAdmin && (
+                <div className="form-floating mb-3">
+                  <input
+                    type="text"
+                    className="form-control primary-input"
+                    id="studentNumber"
+                    name="studentNumber"
+                    placeholder="Student Number"
+                    value={formData.studentNumber}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="studentNumber">
+                    Student Number<span className="text-danger">*</span>
+                  </label>
+                  {renderError("studentNumber")}
+                </div>
+              )}
 
               {!isViewSelf && (
                 <>
@@ -338,8 +341,12 @@ const ProfilePage = () => {
             </p>
             <h1 className="text-label">Email</h1>
             <p className="text-value">{profile.email || "N/A"}</p>
-            <h1 className="text-label">Student Number</h1>
-            <p className="text-value">{profile.studentNumber || "N/A"}</p>
+            {!isAppAdmin && (
+              <>
+                <h1 className="text-label">Student Number</h1>
+                <p className="text-value">{profile.studentNumber || "N/A"}</p>
+              </>
+            )}
             <h1 className="text-label">Phone Number</h1>
             <p className="text-value">{profile.phoneNumber || "N/A"}</p>
             <h1 className="text-label">Counselor</h1>

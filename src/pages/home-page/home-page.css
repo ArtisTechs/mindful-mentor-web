@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 4rem 8rem 0 8rem;
   align-items: center;
 }
 
@@ -10,6 +9,7 @@
   display: flex;
   justify-content: center;
   margin-bottom: 32px;
+  margin-top: 2rem;
 }
 
 .home-page-cards {
@@ -20,27 +20,8 @@
   align-items: start;
 }
 
-@media (max-width: 1024px) {
-  .home-page {
-    padding: 3rem 4rem 0 4rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .home-page {
-    padding: 2rem 2rem 0 2rem;
-    height: auto;
-  }
-}
-
-@media (max-width: 480px) {
-  .home-page {
-    padding: 1rem;
-    height: auto;
-  }
-
-  .emotion-picker-container {
+@media (max-width: 880px) {
+  .home-page-cards {
     flex-direction: column;
-    margin-bottom: 16px;
   }
 }

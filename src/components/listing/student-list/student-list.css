@@ -27,14 +27,14 @@
 }
 
 .emotion-icon-full {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
 }
 
 /* Half size */
 .student-list-half {
   width: 400px;
-  height: 500px;
+  max-height: 80vh;
 }
 
 .student-list-half h1 {
@@ -52,8 +52,8 @@
 }
 
 .emotion-icon-half {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
 }
 
 /* Small size */
@@ -77,8 +77,8 @@
 }
 
 .emotion-icon-small {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
 }
 
 .student-list {
@@ -117,8 +117,7 @@
 }
 
 .emotion-icon {
-  width: 40px;
-  height: 40px;
+  border-radius: 10px;
 }
 
 .student-dropdown-full {

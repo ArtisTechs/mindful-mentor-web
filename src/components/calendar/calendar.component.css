@@ -226,4 +226,18 @@
     width: 20px;
     justify-content: center;
   }
+
+  .calendar-week .calendar-day .day-name {
+    font-size: 12px;
+  }
+
+  .emotion-info img {
+    height: 40px;
+    width: 40px;
+  }
+
+  .emotion-info .emotion-description {
+    font-size: 14px;
+    margin-right: 10px;
+  }
 }

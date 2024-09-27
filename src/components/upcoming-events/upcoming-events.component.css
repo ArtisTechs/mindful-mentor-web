@@ -3,22 +3,27 @@
   border-radius: 20px;
   padding: 1rem;
   background: var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 80vh;
 }
 
 .events-divider {
   height: 1px;
   background-color: black;
-  margin: 20px auto;
+  margin: 20px;
   width: 100%;
 }
 
 .upcoming-events-list {
+  width: 100%;
   overflow: auto;
-  max-height: 390px;
 }
 
 .upcoming-events-container h1 {
-  font-size: 24px;
+  font-size: 20px;
+  margin-bottom: 0;
 }
 
 .schedule-btn {
