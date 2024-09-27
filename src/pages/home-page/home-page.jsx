@@ -6,51 +6,58 @@ import StudentList from "../../components/listing/student-list/student-list";
 import logo from "../../assets/img/mindful-mentor-logo.png";
 import { useGlobalContext } from "../../shared";
 
+import JoyfulImage from "../../assets/img/Joyful.png";
+import MotivatedImage from "../../assets/img/Motivated.png";
+import CalmImage from "../../assets/img/Calm.png";
+import AnxiousImage from "../../assets/img/Anxious.png";
+import SadImage from "../../assets/img/Sad.png";
+import FrustratedImage from "../../assets/img/Frustrated.png";
+
 const HomePage = () => {
   const { currentUserDetails, isAppAdmin } = useGlobalContext();
 
   const students = [
     {
       id: 1,
-      firstName: "Juan",
-      lastName: "Dela Cruz",
-      avatar: "avatar1.png", // Replace with actual avatar image URL
-      emotionIcon: logo, // Replace with actual emotion icon URL
+      firstName: "Miguel",
+      lastName: "Santos",
+      avatar: "avatar1.png",
+      emotion: { code: "motivated", description: "Motivated" },
     },
     {
       id: 2,
-      firstName: "Juan",
-      lastName: "Cruz",
+      firstName: "Carlos",
+      lastName: "Reyes",
       avatar: "avatar2.png",
-      emotionIcon: logo,
+      emotion: { code: "anxious", description: "Anxious" },
     },
     {
       id: 3,
-      firstName: "Juan",
-      lastName: "Dela Cruz",
+      firstName: "Isabel",
+      lastName: "Garcia",
       avatar: "avatar3.png",
-      emotionIcon: logo,
+      emotion: { code: "frustrated", description: "Frustrated" },
     },
     {
       id: 4,
-      firstName: "Juan",
-      lastName: "Dela Cruz",
+      firstName: "Diego",
+      lastName: "Morales",
       avatar: "avatar3.png",
-      emotionIcon: logo,
+      emotion: { code: "joy", description: "Joyful" },
     },
     {
       id: 5,
-      firstName: "Juan",
-      lastName: "Dela Cruz",
+      firstName: "Lucia",
+      lastName: "Torres",
       avatar: "avatar3.png",
-      emotionIcon: logo,
+      emotion: { code: "calm", description: "Calm" },
     },
     {
       id: 6,
-      firstName: "Juan",
-      lastName: "Dela Cruz",
+      firstName: "Emilio",
+      lastName: "Fernandez",
       avatar: "avatar3.png",
-      emotionIcon: logo,
+      emotion: { code: "sad", description: "Sad" },
     },
   ];
 
@@ -70,17 +77,21 @@ const HomePage = () => {
   ];
   return (
     <div className="home-page">
-      <div className="emotion-picker-container">
-        <EmotionPicker />
-      </div>
+      {!isAppAdmin && (
+        <>
+          <div className="emotion-picker-container">
+            <EmotionPicker />
+          </div>
+        </>
+      )}
 
       <div className="home-page-cards">
-        <UpcomingEvents events={events} />
         {isAppAdmin && (
           <>
             <StudentList students={students} size="half" />
           </>
         )}
+        <UpcomingEvents events={events} />
       </div>
     </div>
   );

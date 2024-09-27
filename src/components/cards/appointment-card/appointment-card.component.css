@@ -15,12 +15,13 @@
 
 .card-body {
   display: flex;
-  justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .user-info {
   display: flex;
   align-items: center;
+  width: 50%;
 }
 
 .user-avatar {

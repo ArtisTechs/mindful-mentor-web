@@ -170,24 +170,24 @@ const CalendarComponent = ({ data }) => {
         Mood Colors
       </Popover.Header>
       <Popover.Body>
-        <p className="d-flex align-items-center">
+        <div className="d-flex align-items-center mb-2">
           <div className="info-dot calendar-day-yellow me-2"></div> Joyful
-        </p>
-        <p className="d-flex align-items-center">
+        </div>
+        <div className="d-flex align-items-center mb-2">
           <div className="info-dot calendar-day-green me-2"></div> Motivated
-        </p>
-        <p className="d-flex align-items-center">
+        </div>
+        <div className="d-flex align-items-center mb-2">
           <div className="info-dot calendar-day-blue me-2"></div> Calm
-        </p>
-        <p className="d-flex align-items-center">
+        </div>
+        <div className="d-flex align-items-center mb-2">
           <div className="info-dot calendar-day-orange me-2"></div> Anxious
-        </p>
-        <p className="d-flex align-items-center">
+        </div>
+        <div className="d-flex align-items-center mb-2">
           <div className="info-dot calendar-day-gray me-2"></div> Sad
-        </p>
-        <p className="d-flex align-items-center">
+        </div>
+        <div className="d-flex align-items-center">
           <div className="info-dot calendar-day-red me-2"></div> Frustrated
-        </p>
+        </div>
       </Popover.Body>
     </Popover>
   );

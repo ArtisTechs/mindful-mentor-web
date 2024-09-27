@@ -43,18 +43,18 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                 Dashboard
               </Button>
             </li>
-            <li>
-              <Button
-                className="dashbaord-menu-item"
-                onClick={() =>
-                  handleNavigation(`${ROUTES.WEB}${ROUTES.CALENDAR}`)
-                }
-              >
-                Calendar
-              </Button>
-            </li>
             {isAppAdmin && (
               <>
+                <li>
+                  <Button
+                    className="dashbaord-menu-item"
+                    onClick={() =>
+                      handleNavigation(`${ROUTES.WEB}${ROUTES.CHATS}`)
+                    }
+                  >
+                    Chats
+                  </Button>
+                </li>
                 <li>
                   <Button
                     className="dashbaord-menu-item"
@@ -67,6 +67,16 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                 </li>
               </>
             )}
+            <li>
+              <Button
+                className="dashbaord-menu-item"
+                onClick={() =>
+                  handleNavigation(`${ROUTES.WEB}${ROUTES.CALENDAR}`)
+                }
+              >
+                Calendar
+              </Button>
+            </li>
 
             {/* <li>
               <Button

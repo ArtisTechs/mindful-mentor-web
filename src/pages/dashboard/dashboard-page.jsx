@@ -11,6 +11,7 @@ import CalendarPage from "../calendar-page/calendar-page";
 import AppointmentPage from "../appointment-page/appointment-page";
 import ChatWindow from "../../components/chat-window/chat-window.component";
 import StudentListPage from "../student-list-page/student-list-page";
+import ChatPage from "../chat-page/chat-page";
 
 const DashboardPage = ({ onLogout }) => {
   const { currentUserDetails, isAppAdmin } = useGlobalContext();
@@ -56,11 +57,13 @@ const DashboardPage = ({ onLogout }) => {
           {isAppAdmin && (
             <>
               <Route path={ROUTES.STUDENTS} element={<StudentListPage />} />
+              <Route path={ROUTES.CHATS} element={<ChatPage />} />
             </>
           )}
         </Routes>
       </div>
-      <ChatWindow />
+
+      {!isAppAdmin && <ChatWindow />}
 
       <OffCanvasDashboardMenu
         show={showOffCanvas}
