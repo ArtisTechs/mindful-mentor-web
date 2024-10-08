@@ -125,13 +125,13 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
           setTimeout(() => {
             console.log("Form submitted:", formData);
 
-            const registeredUsers =
-              JSON.parse(localStorage.getItem(STORAGE_KEY.USERS)) || [];
-            const updatedUsers = [...registeredUsers, formData];
-            localStorage.setItem(
-              STORAGE_KEY.USERS,
-              JSON.stringify(updatedUsers)
-            );
+            // const registeredUsers =
+            //   JSON.parse(localStorage.getItem(STORAGE_KEY.USERS)) || [];
+            // const updatedUsers = [...registeredUsers, formData];
+            // localStorage.setItem(
+            //   STORAGE_KEY.USERS,
+            //   JSON.stringify(updatedUsers)
+            // );
 
             toggleForm();
 

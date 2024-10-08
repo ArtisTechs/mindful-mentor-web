@@ -16,12 +16,12 @@
 .card-body {
   display: flex;
   margin-bottom: 1rem;
+  align-items: center;
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  width: 50%;
 }
 
 .user-avatar {
@@ -33,6 +33,7 @@
 
 .user-details {
   margin-left: 1rem;
+  width: 40%;
 }
 
 .user-details h3 {
@@ -66,4 +67,21 @@
   background-color: black;
   margin: 20px 0;
   width: 100%;
+}
+
+@media (max-width: 620px) {
+  .card-body {
+    flex-direction: column;
+  }
+
+  .user-details {
+    margin-left: 0;
+    width: 80%;
+    margin-top: 1rem;
+  }
+
+  .appointment-date {
+    width: 80%;
+    margin-top: 1rem;
+  }
 }
