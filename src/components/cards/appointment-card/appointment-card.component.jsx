@@ -21,10 +21,10 @@ const AppointmentCard = ({ title, student, date, onApprove, onReject }) => {
             )}
             src={student.avatar}
           />
-          <div className="user-details">
-            <h3>{`${student.lastName}, ${student.firstName}`}</h3>
-            <p>{student.role}</p>
-          </div>
+        </div>
+        <div className="user-details">
+          <h3>{`${student.lastName}, ${student.firstName}`}</h3>
+          <p>{student.role}</p>
         </div>
         <div className="appointment-date">
           <h3>Date</h3>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   HashRouter as Router,
   Routes,
@@ -38,15 +38,18 @@ function App() {
     isAdmin: true,
   };
 
-  let registeredUsers =
+  // Check if the app admin is already registered based on email
+  const registeredUsers =
     JSON.parse(localStorage.getItem(STORAGE_KEY.USERS)) || [];
 
-  if (!Array.isArray(registeredUsers)) {
-    registeredUsers = [];
-  }
+  const adminExists = registeredUsers.some(
+    (user) => user.email === appAdmin.email
+  );
 
-  const updatedUsers = [...registeredUsers, appAdmin];
-  localStorage.setItem(STORAGE_KEY.USERS, JSON.stringify(updatedUsers));
+  if (!adminExists) {
+    const updatedUsers = [...registeredUsers, appAdmin];
+    localStorage.setItem(STORAGE_KEY.USERS, JSON.stringify(updatedUsers));
+  }
 
   useEffect(() => {
     const storedProfile = localStorage.getItem(STORAGE_KEY.PROFILE_DETAILS);
