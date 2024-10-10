@@ -8,6 +8,7 @@ import {
   validatePassword,
   EErrorMessages,
   STORAGE_KEY,
+  userSignIn,
 } from "../../shared";
 import "./login-page.css";
 import IntroCarouselComponent from "../../components/intro-carousel/intro-carousel";
@@ -160,29 +161,56 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
 
       if (formIsValid) {
         // Simulate a form submission delay (e.g., API call)
-        setTimeout(() => {
-          const registeredUsers =
-            JSON.parse(localStorage.getItem(STORAGE_KEY.USERS)) || [];
-          const user = registeredUsers.find(
-            (user) => user.email === formData.email
-          );
 
-          if (user) {
-            if (user.password === formData.password) {
-              console.log("Login successful:", formData);
-              toastService.show(ESuccessMessages.LOGIN, "success-toast");
-              onLoginSuccess(user);
-            } else {
+        setTimeout(async () => {
+          try {
+            const userDetails = {
+              email: formData.email,
+              password: formData.password,
+            };
+            const user = await userSignIn(userDetails);
+            toastService.show(ESuccessMessages.LOGIN, "success-toast");
+            console.log(user);
+            onLoginSuccess(user);
+            setFullLoadingHandler(false);
+          } catch (error) {
+            console.log("Login failed:", error.errorCode);
+            if (error.errorCode === "EMAIL_NOT_REGISTERED") {
+              newErrors.email = EErrorMessages.EMAIL_UNREGISTERED;
+              setErrors(newErrors);
+            } else if (error.errorCode === "WRONG_PASSWORD") {
               newErrors.password = EErrorMessages.PASSWORD_INCORRECT;
               setErrors(newErrors);
             }
-          } else {
-            newErrors.email = EErrorMessages.EMAIL_UNREGISTERED;
-            setErrors(newErrors);
+            setFullLoadingHandler(false);
           }
 
           setFullLoadingHandler(false);
-        }, 2000);
+        }, 500);
+
+        // setTimeout(() => {
+        //   const registeredUsers =
+        //     JSON.parse(localStorage.getItem(STORAGE_KEY.USERS)) || [];
+        //   const user = registeredUsers.find(
+        //     (user) => user.email === formData.email
+        //   );
+
+        //   if (user) {
+        //     if (user.password === formData.password) {
+        //       console.log("Login successful:", formData);
+        //       toastService.show(ESuccessMessages.LOGIN, "success-toast");
+        //       onLoginSuccess(user);
+        //     } else {
+        //       newErrors.password = EErrorMessages.PASSWORD_INCORRECT;
+        //       setErrors(newErrors);
+        //     }
+        //   } else {
+        //     newErrors.email = EErrorMessages.EMAIL_UNREGISTERED;
+        //     setErrors(newErrors);
+        //   }
+
+        //   setFullLoadingHandler(false);
+        // }, 2000);
       } else {
         setErrors(newErrors);
         setFullLoadingHandler(false);
