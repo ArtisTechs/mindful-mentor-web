@@ -57,7 +57,7 @@ function App() {
       const profileData = JSON.parse(storedProfile);
       setCurrentUserDetails(profileData);
       setLoggedIn(true);
-      setIsAppAdmin(profileData.isAdmin);
+      setIsAppAdmin(profileData.role === "COUNSELOR");
     }
 
     const timer = setTimeout(() => {
