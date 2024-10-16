@@ -9,11 +9,9 @@ import { GlobalStateProvider } from "./shared/context";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <GlobalStateProvider>
-      <App />
-    </GlobalStateProvider>
-  </React.StrictMode>
+  <GlobalStateProvider>
+    <App />
+  </GlobalStateProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

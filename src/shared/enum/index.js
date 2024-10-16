@@ -3,3 +3,7 @@ export * from "./error-messages";
 export * from "./date-enum";
 export * from "./emotion-enum";
 export * from "./api-urls-enum";
+export * from "./role-enum";
+export * from "./account-status.enum";
+export * from "./appointment-status.enum";
+export * from "./date-enum";

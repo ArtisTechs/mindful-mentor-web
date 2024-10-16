@@ -1,20 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./home-page.css";
 import EmotionPicker from "../../components/emotion-picker/emotion-picker.component";
 import UpcomingEvents from "../../components/upcoming-events/upcoming-events.component";
 import StudentList from "../../components/listing/student-list/student-list";
-import logo from "../../assets/img/mindful-mentor-logo.png";
-import { useGlobalContext } from "../../shared";
+import {
+  AppointmentStatusEnum,
+  EErrorMessages,
+  fetchAppointmentList,
+  toastService,
+  useGlobalContext,
+} from "../../shared";
 
-import JoyfulImage from "../../assets/img/Joyful.png";
-import MotivatedImage from "../../assets/img/Motivated.png";
-import CalmImage from "../../assets/img/Calm.png";
-import AnxiousImage from "../../assets/img/Anxious.png";
-import SadImage from "../../assets/img/Sad.png";
-import FrustratedImage from "../../assets/img/Frustrated.png";
-
-const HomePage = () => {
+const HomePage = ({ setFullLoadingHandler }) => {
   const { currentUserDetails, isAppAdmin } = useGlobalContext();
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (currentUserDetails.id) {
+      loadAppointments();
+    }
+  }, [currentUserDetails.id]);
+
+  const loadAppointments = async () => {
+    setLoading(true);
+    const today = new Date().toISOString().split("T")[0];
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const finalEndDate = tomorrow.toISOString().split("T")[0];
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Ensure we are passing userId only if the user is not an admin
+      const userId = isAppAdmin ? null : currentUserDetails.id;
+
+      const response = await fetchAppointmentList({
+        userId: userId,
+        sortBy: "scheduledDate",
+        sortDirection: "DSC",
+        startDate: today,
+        endDate: isAppAdmin ? finalEndDate : null,
+        status: isAppAdmin ? AppointmentStatusEnum.APPROVED : null,
+      });
+
+      setAppointments(response.content);
+    } catch (error) {
+      toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const students = [
     {
@@ -61,20 +97,6 @@ const HomePage = () => {
     },
   ];
 
-  const events = [
-    {
-      title: "Scheduled Appointment with Counselor",
-      date: "September 30, 2024",
-      description:
-        "Join us for an inspiring workshop on mindfulness and mentorship.",
-    },
-    {
-      title: "Scheduled Appointment with Counselor",
-      date: "October 5, 2024",
-      description:
-        "A seminar on mental wellness and stress management techniques.",
-    },
-  ];
   return (
     <div className="home-page">
       {!isAppAdmin && (
@@ -86,12 +108,12 @@ const HomePage = () => {
       )}
 
       <div className="home-page-cards">
-        {isAppAdmin && (
-          <>
-            <StudentList students={students} size="half" />
-          </>
-        )}
-        <UpcomingEvents events={events} />
+        {isAppAdmin && <StudentList students={students} size="half" />}
+        <UpcomingEvents
+          appointments={appointments}
+          isAppAdmin={isAppAdmin}
+          setFullLoadingHandler={setFullLoadingHandler}
+        />
       </div>
     </div>
   );

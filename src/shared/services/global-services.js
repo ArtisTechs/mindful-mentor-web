@@ -96,3 +96,30 @@ export function stringAvatar(firstName, lastName, size, fontSize) {
     alt: `${firstName || ""} ${lastName || ""}`,
   };
 }
+
+export function removeEmptyFields(formData) {
+  const cleanedData = {};
+
+  Object.keys(formData).forEach((key) => {
+    const value = formData[key];
+
+    // Check if the value is a string before calling trim
+    if (typeof value === "string" && value.trim() !== "") {
+      cleanedData[key] = value.trim();
+    } else if (value !== null && value !== undefined) {
+      // For non-string values, just add them as is
+      cleanedData[key] = value;
+    }
+  });
+
+  return cleanedData;
+}
+
+// Capitalizes the first letter of each word in the string
+export const capitalizeText = (text) => {
+  if (!text) return text;
+  return text
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};

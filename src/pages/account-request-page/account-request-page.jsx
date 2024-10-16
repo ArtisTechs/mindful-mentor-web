@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./student-list-page.css";
+import "./account-request-page.css";
 import StudentList from "../../components/listing/student-list/student-list";
 import {
   AccountStatusEnum,
@@ -8,7 +8,7 @@ import {
   toastService,
 } from "../../shared";
 
-const StudentListPage = () => {
+const AccountRequestPage = () => {
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ const StudentListPage = () => {
 
       const response = await fetchStudentList({
         searchName: debouncedSearchTerm || undefined,
-        status: AccountStatusEnum.ACTIVE,
+        status: AccountStatusEnum.REGISTERED,
       });
       setStudents(response.content);
     } catch (error) {
@@ -50,8 +50,8 @@ const StudentListPage = () => {
   };
 
   return (
-    <div className="student-list-page">
-      <div className="student-list-search-bar">
+    <div className="account-request-page">
+      <div className="account-request-search-bar">
         <input
           type="text"
           placeholder="Search students..."
@@ -66,10 +66,11 @@ const StudentListPage = () => {
         loading={loading}
         size="full"
         showHeader={false}
-        refetch={refetch}
+        isRequest={true}
+        refetch={refetch} // Pass refetch function to StudentList
       />
     </div>
   );
 };
 
-export default StudentListPage;
+export default AccountRequestPage;

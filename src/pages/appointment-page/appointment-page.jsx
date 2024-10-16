@@ -1,32 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form } from "react-bootstrap";
 import "./appointment-page.css";
 import { Avatar } from "@mui/material";
 import {
   EErrorMessages,
   ESuccessMessages,
+  fetchAppointmentList,
   STORAGE_KEY,
   stringAvatar,
   toastService,
+  createAppointment,
+  fetchStudentList,
+  fetchCounselorList,
+  AccountStatusEnum,
 } from "../../shared";
 import DatePicker from "../../components/date-picker/date-picker.component";
 import { useGlobalContext } from "../../shared/context";
 import AppointmentCardList from "../../components/listing/appointment-list/appointment-list";
 
-const AppointmentPage = () => {
+const AppointmentPage = ({ setFullLoadingHandler }) => {
   const { currentUserDetails, isAppAdmin } = useGlobalContext();
-
-  const counselor = {
-    email: "suarezestanislaojose@gmail.com",
-    firstName: "Maria",
-    lastName: "Cruz",
-    phoneNumber: "9511682096",
-    availableSchedule: "Mon - Fri (8:00 am - 5:00 pm)",
-    avatar: "",
-  };
-
+  const [appointments, setAppointments] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [reason, setReason] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [counselorDetails, setCounselorDetails] = useState("");
+
+  useEffect(() => {
+    if (isAppAdmin) {
+      loadAppointments();
+    } else {
+      fetchCounselorDetails();
+    }
+  }, [currentUserDetails.id]);
+
+  const fetchCounselorDetails = async () => {
+    setFullLoadingHandler(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const response = await fetchCounselorList({
+        status: AccountStatusEnum.ACTIVE,
+      });
+      setCounselorDetails(response.content[0]);
+    } catch (error) {
+      toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+    } finally {
+      setFullLoadingHandler(false);
+    }
+  };
+
+  const loadAppointments = async () => {
+    setLoading(true);
+    const today = new Date().toISOString().split("T")[0];
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const response = await fetchAppointmentList({
+        sortBy: "scheduledDate",
+        sortDirection: "DSC",
+        startDate: today,
+      });
+
+      setAppointments(response.content);
+    } catch (error) {
+      toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
@@ -36,41 +79,42 @@ const AppointmentPage = () => {
     setReason(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setFullLoadingHandler(true);
 
     if (!selectedDate) {
+      setFullLoadingHandler(false);
       toastService.show(EErrorMessages.DATE_REQUIRED, "danger-toast");
       return;
     }
 
-    const savedAppointments =
-      JSON.parse(localStorage.getItem(STORAGE_KEY.APPOINTMENTS)) || [];
-
-    const appointmentExists = savedAppointments.some(
-      (appointment) => appointment.date === selectedDate
-    );
-
-    if (appointmentExists) {
-      toastService.show(EErrorMessages.APPOINTMENT_DUPLICATE, "danger-toast");
-    } else {
-      const newAppointment = {
-        date: selectedDate,
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const appointmentDTO = {
+        userId: currentUserDetails.id,
+        scheduledDate: selectedDate,
         reason: reason,
       };
 
-      const updatedAppointments = [...savedAppointments, newAppointment];
+      const createdAppointment = await createAppointment(appointmentDTO);
 
-      localStorage.setItem(
-        STORAGE_KEY.APPOINTMENTS,
-        JSON.stringify(updatedAppointments)
-      );
+      if (createdAppointment) {
+        toastService.show(ESuccessMessages.APPOINTMENT, "success-toast");
 
-      toastService.show(ESuccessMessages.APPOINTMENT, "success-toast");
-
-      setSelectedDate("");
-      setReason("");
+        // Reset the form after successful submission
+        setSelectedDate("");
+        setReason("");
+      }
+    } catch (error) {
+      toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+    } finally {
+      setFullLoadingHandler(false);
     }
+  };
+
+  const refetch = () => {
+    loadAppointments();
   };
 
   return (
@@ -81,20 +125,20 @@ const AppointmentPage = () => {
             <div className="counselor-info">
               <Avatar
                 {...stringAvatar(
-                  `${counselor.firstName}`,
-                  `${counselor.lastName}`,
+                  `${counselorDetails.firstName}`,
+                  `${counselorDetails.lastName}`,
                   100,
                   32
                 )}
-                src={counselor.avatar}
+                src={counselorDetails.profilePicture}
               />
               <div className="counselor-details">
-                <h3 className="mb-0">{`${counselor.firstName} ${counselor.lastName}`}</h3>
+                <h3 className="mb-0">{`${counselorDetails.firstName} ${counselorDetails.lastName}`}</h3>
                 <p className="mb-0">Counselor</p>
-                <p className="available-schedule mb-0">
+                {/* <p className="available-schedule mb-0">
                   Available Schedule:{" "}
                   <strong>{counselor.availableSchedule}</strong>
-                </p>
+                </p> */}
               </div>
             </div>
 
@@ -130,76 +174,15 @@ const AppointmentPage = () => {
       )}
       {isAppAdmin && (
         <>
-          <AppointmentCardList appointments={appointments} />
+          <AppointmentCardList
+            appointments={appointments}
+            isLoading={loading}
+            refetch={refetch}
+          />
         </>
       )}
     </div>
   );
 };
-
-const appointments = [
-  {
-    id: 1,
-    student: {
-      firstName: "Juan",
-      lastName: "Dela Cruz",
-      role: "Student",
-      profilePicture: "/path/to/image1.jpg",
-    },
-    date: "Monday - September 16, 2024",
-  },
-  {
-    id: 2,
-    student: {
-      firstName: "Anna",
-      lastName: "Smith",
-      role: "Student",
-      profilePicture: "/path/to/image2.jpg",
-    },
-    date: "Tuesday - September 17, 2024",
-  },
-  {
-    id: 3,
-    student: {
-      firstName: "John",
-      lastName: "Doe",
-      role: "Student",
-      profilePicture: "/path/to/image3.jpg",
-    },
-    date: "Wednesday - September 18, 2024", // Added a date instead of null
-  },
-  {
-    id: 4,
-    student: {
-      firstName: "Emily",
-      lastName: "Williams",
-      role: "Student",
-      profilePicture: "/path/to/image4.jpg",
-    },
-    date: "Thursday - September 19, 2024", // Added a date instead of missing field
-  },
-  {
-    id: 5,
-    student: {
-      firstName: "Chris",
-      lastName: "Miller",
-      role: "Student",
-      profilePicture: "/path/to/image5.jpg",
-    },
-    date: "Friday - September 20, 2024",
-  },
-  {
-    id: 6,
-    student: {
-      firstName: "David",
-      lastName: "Johnson",
-      role: "Student",
-      profilePicture: "/path/to/image6.jpg",
-    },
-    date: "Saturday - September 21, 2024",
-  },
-];
-
-
 
 export default AppointmentPage;

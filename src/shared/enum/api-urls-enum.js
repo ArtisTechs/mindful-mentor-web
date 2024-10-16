@@ -6,5 +6,10 @@ export const API_URL = Object.freeze({
   PROFILE: "/profile",
   STATUS: "/status",
   DELETE: "/delete",
+  UPDATE: "/update",
   LIST: "/list",
+  APPOINTMENTS: "/appointments",
+  UPLOAD_PROFILE_PICTURE: "/uploadProfilePicture",
+  MOODS: "/moods",
+  ADD: "/add",
 });

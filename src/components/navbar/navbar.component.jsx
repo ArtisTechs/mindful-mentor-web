@@ -14,7 +14,9 @@ const Navbar = ({ title, toggleOffCanvas, onLogout, profile }) => {
   };
 
   const handleProfileClick = () => {
-    navigate(`${ROUTES.WEB}${ROUTES.PROFILE}`); // Use navigate for programmatic navigation
+    navigate(`${ROUTES.WEB}${ROUTES.PROFILE}`, {
+      state: { isViewSelf: true },
+    });
   };
 
   return (

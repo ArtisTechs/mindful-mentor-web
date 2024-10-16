@@ -9,6 +9,9 @@ import {
   EErrorMessages,
   STORAGE_KEY,
   userSignIn,
+  userSignUp,
+  RoleEnum,
+  capitalizeText,
 } from "../../shared";
 import "./login-page.css";
 import IntroCarouselComponent from "../../components/intro-carousel/intro-carousel";
@@ -54,7 +57,7 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFullLoadingHandler(true); // Show loader
+    setFullLoadingHandler(true);
 
     let formIsValid = true;
     let newErrors = {
@@ -122,23 +125,42 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
           setFormStep(2);
           setFullLoadingHandler(false);
         } else {
-          // Simulate a form submission delay (e.g., API call)
-          setTimeout(() => {
-            console.log("Form submitted:", formData);
+          setTimeout(async () => {
+            try {
+              const userDetails = {
+                firstName: capitalizeText(formData.firstName),
+                middleName: capitalizeText(formData.middleName),
+                lastName: capitalizeText(formData.lastName),
+                email: formData.email,
+                password: formData.password,
+                phoneNumber: formData.phoneNumber,
+                studentNumber: formData.studentNumber,
+                role: RoleEnum.STUDENT,
+              };
+              const user = await userSignUp(userDetails);
 
-            // const registeredUsers =
-            //   JSON.parse(localStorage.getItem(STORAGE_KEY.USERS)) || [];
-            // const updatedUsers = [...registeredUsers, formData];
-            // localStorage.setItem(
-            //   STORAGE_KEY.USERS,
-            //   JSON.stringify(updatedUsers)
-            // );
+              toggleForm();
+              toastService.show(ESuccessMessages.REGISTER, "success-toast");
+              setFullLoadingHandler(false);
+            } catch (error) {
+              console.log("Register failed:", error.errorCode);
+              if (error.errorCode === "EMAIL_ALREADY_REGISTERED") {
+                newErrors.email = error.message;
+                setErrors(newErrors);
+              } else if (
+                error.errorCode === "STUDENT_NUMBER_ALREADY_REGISTERED"
+              ) {
+                newErrors.studentNumber = error.message;
+                setErrors(newErrors);
+                setFormStep(1);
+              } else {
+                toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+              }
+              setFullLoadingHandler(false);
+            }
 
-            toggleForm();
-
-            toastService.show(ESuccessMessages.REGISTER, "success-toast");
             setFullLoadingHandler(false);
-          }, 2000);
+          }, 500);
         }
       } else {
         setErrors(newErrors);
@@ -160,8 +182,6 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
       }
 
       if (formIsValid) {
-        // Simulate a form submission delay (e.g., API call)
-
         setTimeout(async () => {
           try {
             const userDetails = {
@@ -181,36 +201,14 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
             } else if (error.errorCode === "WRONG_PASSWORD") {
               newErrors.password = EErrorMessages.PASSWORD_INCORRECT;
               setErrors(newErrors);
+            } else {
+              toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
             }
             setFullLoadingHandler(false);
           }
 
           setFullLoadingHandler(false);
         }, 500);
-
-        // setTimeout(() => {
-        //   const registeredUsers =
-        //     JSON.parse(localStorage.getItem(STORAGE_KEY.USERS)) || [];
-        //   const user = registeredUsers.find(
-        //     (user) => user.email === formData.email
-        //   );
-
-        //   if (user) {
-        //     if (user.password === formData.password) {
-        //       console.log("Login successful:", formData);
-        //       toastService.show(ESuccessMessages.LOGIN, "success-toast");
-        //       onLoginSuccess(user);
-        //     } else {
-        //       newErrors.password = EErrorMessages.PASSWORD_INCORRECT;
-        //       setErrors(newErrors);
-        //     }
-        //   } else {
-        //     newErrors.email = EErrorMessages.EMAIL_UNREGISTERED;
-        //     setErrors(newErrors);
-        //   }
-
-        //   setFullLoadingHandler(false);
-        // }, 2000);
       } else {
         setErrors(newErrors);
         setFullLoadingHandler(false);

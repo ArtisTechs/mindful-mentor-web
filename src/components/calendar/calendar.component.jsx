@@ -1,12 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button, OverlayTrigger, Popover } from "react-bootstrap";
 import "./calendar.component.css";
-import { daysOfWeekShort, daysOfWeek } from "../../shared";
+import { daysOfWeekShort, daysOfWeek, emotionCode } from "../../shared";
+import JoyfulImage from "../../assets/img/Joyful.png";
+import MotivatedImage from "../../assets/img/Motivated.png";
+import CalmImage from "../../assets/img/Calm.png";
+import AnxiousImage from "../../assets/img/Anxious.png";
+import SadImage from "../../assets/img/Sad.png";
+import FrustratedImage from "../../assets/img/Frustrated.png";
 import logo from "../../assets/img/mindful-mentor-logo.png";
 
-const CalendarComponent = ({ data }) => {
+const CalendarComponent = ({ data, onDateRangeChange }) => {
   const [view, setView] = useState("month"); // 'month' or 'week'
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  const getDateRange = useCallback(() => {
+    let start, end;
+    if (view === "month") {
+      start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    } else {
+      const startOfWeek = new Date(currentDate);
+      startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+      start = new Date(startOfWeek);
+      end = new Date(startOfWeek);
+      end.setDate(startOfWeek.getDate() + 6);
+    }
+    onDateRangeChange(start, end);
+    return { start, end };
+  }, [currentDate, view, onDateRangeChange]);
+
+  useEffect(() => {
+    getDateRange();
+  }, [getDateRange]);
+
+  useEffect(() => {
+    getDateRange();
+  }, [currentDate, view, getDateRange]);
 
   const handlePrev = () => {
     if (view === "month") {
@@ -38,46 +68,40 @@ const CalendarComponent = ({ data }) => {
     const firstDay = new Date(Date.UTC(year, month, 1));
     const lastDay = new Date(Date.UTC(year, month + 1, 0));
     const days = [];
-
     for (let i = 1; i <= lastDay.getUTCDate(); i++) {
       days.push(new Date(Date.UTC(year, month, i)));
     }
-
     const startDay = firstDay.getUTCDay();
     const daysToDisplay = [];
-
     for (let i = 0; i < startDay; i++) {
       daysToDisplay.push(null);
     }
-
     daysToDisplay.push(...days);
-
     const endDay = lastDay.getUTCDay();
     if (endDay < 6) {
       for (let i = 1; i <= 6 - endDay; i++) {
         daysToDisplay.push(null);
       }
     }
-
     return daysToDisplay;
   };
 
   const getDayColor = (day) => {
-    const dateStr = day.toISOString().split("T")[0]; // Convert to YYYY-MM-DD format
+    const dateStr = day.toISOString().split("T")[0];
     const entry = data.find((data) => data.date.startsWith(dateStr));
     if (entry) {
-      switch (entry.emotion.code) {
-        case "joy":
+      switch (entry.mood.code) {
+        case emotionCode.JOY.code:
           return "yellow";
-        case "motivated":
+        case emotionCode.MOTIVATED.code:
           return "green";
-        case "calm":
+        case emotionCode.CALM.code:
           return "blue";
-        case "anxious":
+        case emotionCode.ANXIOUS.code:
           return "orange";
-        case "sad":
+        case emotionCode.SAD.code:
           return "gray";
-        case "frustrated":
+        case emotionCode.FRUSTRATED.code:
           return "red";
         default:
           return "default";
@@ -86,17 +110,34 @@ const CalendarComponent = ({ data }) => {
     return "default";
   };
 
+  const getEmotionImage = (moodCode) => {
+    switch (moodCode) {
+      case emotionCode.JOY.code:
+        return JoyfulImage;
+      case emotionCode.MOTIVATED.code:
+        return MotivatedImage;
+      case emotionCode.CALM.code:
+        return CalmImage;
+      case emotionCode.ANXIOUS.code:
+        return AnxiousImage;
+      case emotionCode.SAD.code:
+        return SadImage;
+      case emotionCode.FRUSTRATED.code:
+        return FrustratedImage;
+      default:
+        return logo;
+    }
+  };
+
   const getDaysInWeek = (date) => {
     const startOfWeek = new Date(date);
     startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-
     const days = [];
     for (let i = 0; i < 7; i++) {
       const day = new Date(startOfWeek);
       day.setDate(day.getDate() + i);
       days.push(day);
     }
-
     return days;
   };
 
@@ -108,7 +149,7 @@ const CalendarComponent = ({ data }) => {
 
     return days.map((day, index) => {
       if (day) {
-        const dateStr = day.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
+        const dateStr = day.toISOString().split("T")[0];
         const entry = data.find((data) => data.date.startsWith(dateStr));
 
         return (
@@ -123,11 +164,11 @@ const CalendarComponent = ({ data }) => {
                 {entry && (
                   <div className="emotion-info">
                     <div className="emotion-description">
-                      {entry.emotion.description}
+                      {entry.mood.description}
                     </div>
                     <img
-                      src={entry.icon || logo}
-                      alt={entry.emotion.code}
+                      src={getEmotionImage(entry.mood.code)} // Use the getEmotionImage function here
+                      alt={entry.mood.code}
                       className="emotion-icon"
                     />
                   </div>

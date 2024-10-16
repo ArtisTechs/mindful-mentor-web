@@ -12,13 +12,12 @@ import AppointmentPage from "../appointment-page/appointment-page";
 import ChatWindow from "../../components/chat-window/chat-window.component";
 import StudentListPage from "../student-list-page/student-list-page";
 import ChatPage from "../chat-page/chat-page";
+import AccountRequestPage from "../account-request-page/account-request-page";
 
-const DashboardPage = ({ onLogout }) => {
+const DashboardPage = ({ onLogout, setFullLoadingHandler }) => {
   const { currentUserDetails, isAppAdmin } = useGlobalContext();
   const [pageTitle, setPageTitle] = useState("Dashboard");
   const [showOffCanvas, setShowOffCanvas] = useState(false);
-  const profileDetails =
-    JSON.parse(localStorage.getItem(STORAGE_KEY.PROFILE_DETAILS)) || {};
   const location = useLocation();
 
   useEffect(() => {
@@ -44,20 +43,42 @@ const DashboardPage = ({ onLogout }) => {
           title={pageTitle}
           toggleOffCanvas={handleToggleOffCanvas}
           onLogout={onLogout}
-          profile={profileDetails}
+          profile={currentUserDetails}
         />
       </div>
       <div className="dashboard-content">
         <Routes>
-          <Route path={ROUTES.DASHBOARD} element={<HomePage />} />
-          <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
-          <Route path={ROUTES.CALENDAR} element={<CalendarPage />} />
-          <Route path={ROUTES.APPOINTMENTS} element={<AppointmentPage />} />
+          <Route
+            path={ROUTES.DASHBOARD}
+            element={<HomePage setFullLoadingHandler={setFullLoadingHandler} />}
+          />
+          <Route
+            path={ROUTES.PROFILE}
+            element={
+              <ProfilePage setFullLoadingHandler={setFullLoadingHandler} />
+            }
+          />
+          <Route
+            path={ROUTES.CALENDAR}
+            element={
+              <CalendarPage setFullLoadingHandler={setFullLoadingHandler} />
+            }
+          />
+          <Route
+            path={ROUTES.APPOINTMENTS}
+            element={
+              <AppointmentPage setFullLoadingHandler={setFullLoadingHandler} />
+            }
+          />
 
           {isAppAdmin && (
             <>
               <Route path={ROUTES.STUDENTS} element={<StudentListPage />} />
               <Route path={ROUTES.CHATS} element={<ChatPage />} />
+              <Route
+                path={ROUTES.ACCOUNT_REQUEST}
+                element={<AccountRequestPage />}
+              />
             </>
           )}
         </Routes>

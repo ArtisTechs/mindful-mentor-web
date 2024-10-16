@@ -1,114 +1,130 @@
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "./calendar-page.css";
 import CalendarComponent from "../../components/calendar/calendar.component";
 import { useGlobalContext } from "../../shared/context";
 import StudentList from "../../components/listing/student-list/student-list";
+import {
+  AccountStatusEnum,
+  EErrorMessages,
+  fetchStudentList,
+  formatDate,
+  getMoods,
+  toastService,
+} from "../../shared";
+import { DateFormat } from "../../shared/enum/date-format.enum";
 
-const CalendarPage = () => {
+const CalendarPage = ({ setFullLoadingHandler }) => {
   const { currentUserDetails, isAppAdmin } = useGlobalContext();
+  const [moodsData, setMoodsData] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [dateRange, setDateRange] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedStudent, setSelectedStudent] = useState(null);
 
-  const mockData = [
-    {
-      id: "1234",
-      emotion: { code: "joy", description: "Joyful" },
-      date: "2024-09-17T07:22:43Z",
-      icon: "",
-    },
-    {
-      id: "12345",
-      emotion: { code: "sad", description: "Sad" },
-      date: "2024-09-18T07:22:43Z",
-      icon: "",
-    },
-    {
-      id: "12346",
-      emotion: { code: "motivated", description: "Motivated" },
-      date: "2024-09-19T07:22:43Z",
-      icon: "",
-    },
-    {
-      id: "12346",
-      emotion: { code: "calm", description: "Calm" },
-      date: "2024-09-20T07:22:43Z",
-      icon: "",
-    },
-    {
-      id: "12346",
-      emotion: { code: "anxious", description: "Anxious" },
-      date: "2024-09-21T07:00:43Z",
-      icon: "",
-    },
-    {
-      id: "12346",
-      emotion: { code: "frustrated", description: "Frustrated" },
-      date: "2024-09-16T07:22:43Z",
-      icon: "",
-    },
-  ];
+  // Fetch moods whenever the date range or current user changes
+  useEffect(() => {
+    if (currentUserDetails?.id && dateRange?.startDate && dateRange?.endDate) {
+      const fetchMoods = async () => {
+        try {
+          setFullLoadingHandler(true);
+          await new Promise((resolve) => setTimeout(resolve, 500));
 
-  const students = [
-    {
-      id: 1,
-      firstName: "Miguel",
-      lastName: "Santos",
-      avatar: "avatar1.png",
-      emotion: { code: "motivated", description: "Motivated" },
+          const filters = {
+            userId: selectedStudent
+              ? selectedStudent.id
+              : currentUserDetails?.id,
+            startDate: dateRange.startDate,
+            endDate: dateRange.endDate,
+          };
+
+          const data = await getMoods(filters);
+          console.log("Mood data fetched:", data);
+          setMoodsData(data);
+        } catch (error) {
+          toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+        } finally {
+          setFullLoadingHandler(false);
+        }
+      };
+
+      fetchMoods();
+    }
+  }, [dateRange, currentUserDetails, selectedStudent]);
+
+  useEffect(() => {
+    if (isAppAdmin) {
+      loadStudents();
+    }
+  }, [isAppAdmin]);
+
+  const loadStudents = async () => {
+    setLoading(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const response = await fetchStudentList({
+        status: AccountStatusEnum.ACTIVE,
+      });
+      setStudents(response.content);
+    } catch (error) {
+      toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Memoize the onDateRangeChange function to avoid unnecessary re-renders
+  const onDateRangeChange = useCallback(
+    (startDate, endDate) => {
+      // Format the start and end date once
+      const formattedStartDate = formatDate(startDate, DateFormat.YYYY_MM_DD);
+      const formattedEndDate = formatDate(endDate, DateFormat.YYYY_MM_DD);
+
+      // Only update the date range if it's different from the current one
+      if (
+        formattedStartDate !== dateRange?.startDate ||
+        formattedEndDate !== dateRange?.endDate
+      ) {
+        setDateRange({
+          startDate: formattedStartDate,
+          endDate: formattedEndDate,
+        });
+        console.log(
+          "Selected date range:",
+          formattedStartDate,
+          formattedEndDate
+        );
+      }
     },
-    {
-      id: 2,
-      firstName: "Carlos",
-      lastName: "Reyes",
-      avatar: "avatar2.png",
-      emotion: { code: "anxious", description: "Anxious" },
-    },
-    {
-      id: 3,
-      firstName: "Isabel",
-      lastName: "Garcia",
-      avatar: "avatar3.png",
-      emotion: { code: "frustrated", description: "Frustrated" },
-    },
-    {
-      id: 4,
-      firstName: "Diego",
-      lastName: "Morales",
-      avatar: "avatar3.png",
-      emotion: { code: "joy", description: "Joyful" },
-    },
-    {
-      id: 5,
-      firstName: "Lucia",
-      lastName: "Torres",
-      avatar: "avatar3.png",
-      emotion: { code: "calm", description: "Calm" },
-    },
-    {
-      id: 6,
-      firstName: "Emilio",
-      lastName: "Fernandez",
-      avatar: "avatar3.png",
-      emotion: { code: "sad", description: "Sad" },
-    },
-  ];
+    [dateRange]
+  ); // Only change when dateRange itself changes
+
+  const handleSelectStudent = (student) => {
+    setSelectedStudent(student);
+    console.log("Selected student:", selectedStudent);
+  };
 
   return (
     <div className="calendar-page">
       {isAppAdmin && (
-        <>
-          <div className="student-list-calendar">
-            <StudentList
-              students={students}
-              size="half"
-              hideEmotion={true}
-              hideOptions={true}
-              isItemClickable={true}
-            />
-          </div>
-        </>
+        <div className="student-list-calendar">
+          <StudentList
+            students={students}
+            size="half"
+            hideEmotion={true}
+            hideOptions={true}
+            isItemClickable={true}
+            loading={loading}
+            onSelectStudent={handleSelectStudent}
+          />
+        </div>
       )}
 
       <div className="calendar-component-page">
-        <CalendarComponent data={mockData} />
+        <CalendarComponent
+          onDateRangeChange={onDateRangeChange}
+          data={moodsData}
+        />
       </div>
     </div>
   );
