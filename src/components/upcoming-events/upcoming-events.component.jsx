@@ -155,7 +155,7 @@ const UpcomingEvents = ({
                 </button>
               </>
             ) : (
-              <p>You don't have any upcoming counseling schedule.</p>
+              <p>You don't have any upcoming counseling schedule today.</p>
             )}
           </div>
         )}

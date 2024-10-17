@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./student-list.css";
 import { Avatar, Skeleton } from "@mui/material";
 import {
@@ -47,12 +47,17 @@ const StudentList = ({
   showHeader = true,
   hideOptions,
   hideEmotion,
+  hideDelete,
   isGetLatestStudent,
   isItemClickable,
   onSelectStudent,
+  isSelectedStudent,
   isRequest = false,
   refetch,
 }) => {
+  const [selectedStudent, setSelectedStudent] = useState(
+    isSelectedStudent || null
+  );
   const hasInitialized = useRef(false);
   const navigate = useNavigate();
 
@@ -63,13 +68,20 @@ const StudentList = ({
       students.length > 0 &&
       !hasInitialized.current
     ) {
-      onSelectStudent(students[0]); // Select the first student
-      hasInitialized.current = true; // Mark as initialized to prevent future triggers
+      if (!selectedStudent) {
+        onSelectStudent(students[0]);
+        setSelectedStudent(students[0]);
+      } else {
+        onSelectStudent(selectedStudent);
+      }
+
+      hasInitialized.current = true;
     }
   }, [isGetLatestStudent, onSelectStudent, students]);
 
   const handleItemClick = (student) => {
     if (isItemClickable && onSelectStudent) {
+      setSelectedStudent(student);
       onSelectStudent(student);
     }
   };
@@ -96,8 +108,7 @@ const StudentList = ({
         }
       },
       onCancel: () => {
-        // Optionally handle cancel action
-        console.log("Approval cancelled");
+        // console.log("Approval cancelled");
       },
     });
   };
@@ -159,13 +170,28 @@ const StudentList = ({
           <>
             {[...Array(5)].map((_, index) => (
               <div
-                key={index}
+                key={index} // Add key here
                 className={`student-card-loader student-card-${size}`}
               >
-                <Skeleton variant="circular" width={42} height={42} />
+                <Skeleton
+                  key={`circular-${index}`}
+                  variant="circular"
+                  width={42}
+                  height={42}
+                />
                 <div className="student-card-loader-label">
-                  <Skeleton variant="text" width="50%" height={32} />
-                  <Skeleton variant="text" width="30%" height={20} />
+                  <Skeleton
+                    key={`text-1-${index}`}
+                    variant="text"
+                    width="50%"
+                    height={32}
+                  />
+                  <Skeleton
+                    key={`text-2-${index}`}
+                    variant="text"
+                    width="30%"
+                    height={20}
+                  />
                 </div>
               </div>
             ))}
@@ -174,7 +200,9 @@ const StudentList = ({
           students.map((student) => (
             <div
               key={student.id}
-              className={`student-card student-card-${size}`}
+              className={`student-card student-card-${size} ${
+                selectedStudent?.id === student.id ? "selected-student" : ""
+              }`}
               onClick={() => handleItemClick(student)}
               style={{ cursor: isItemClickable ? "pointer" : "default" }}
             >
@@ -206,60 +234,61 @@ const StudentList = ({
               </div>
 
               {!hideOptions && !isRequest && (
-                  <div className={`dropdown student-dropdown-${size}`}>
-                    <button
-                      className="ellipsis-btn"
-                      type="button"
-                      id={`dropdownMenuButton${student.id}`}
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <i className="fas fa-ellipsis-v"></i>
-                    </button>
-                    <ul
-                      className="dropdown-menu"
-                      aria-labelledby={`dropdownMenuButton${student.id}`}
-                    >
-                      <li>
-                        <button
-                          className="dropdown-item"
-                          onClick={() =>
-                            handleNavigation(
-                              `${ROUTES.WEB}${ROUTES.CALENDAR}`,
-                              student
-                            )
-                          }
-                        >
-                          Calendar
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          className="dropdown-item"
-                          onClick={() =>
-                            handleNavigation(
-                              `${ROUTES.WEB}${ROUTES.CHATS}`,
-                              student
-                            )
-                          }
-                        >
-                          Chat
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          className="dropdown-item"
-                          onClick={() =>
-                            handleNavigation(
-                              `${ROUTES.WEB}${ROUTES.PROFILE}`,
-                              student,
-                              false
-                            )
-                          }
-                        >
-                          Profile
-                        </button>
-                      </li>
+                <div className={`dropdown student-dropdown-${size}`}>
+                  <button
+                    className="ellipsis-btn"
+                    type="button"
+                    id={`dropdownMenuButton${student.id}`}
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i className="fas fa-ellipsis-v"></i>
+                  </button>
+                  <ul
+                    className="dropdown-menu"
+                    aria-labelledby={`dropdownMenuButton${student.id}`}
+                  >
+                    <li>
+                      <button
+                        className="dropdown-item"
+                        onClick={() =>
+                          handleNavigation(
+                            `${ROUTES.WEB}${ROUTES.CALENDAR}`,
+                            student
+                          )
+                        }
+                      >
+                        Calendar
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="dropdown-item"
+                        onClick={() =>
+                          handleNavigation(
+                            `${ROUTES.WEB}${ROUTES.CHATS}`,
+                            student
+                          )
+                        }
+                      >
+                        Chat
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="dropdown-item"
+                        onClick={() =>
+                          handleNavigation(
+                            `${ROUTES.WEB}${ROUTES.PROFILE}`,
+                            student,
+                            false
+                          )
+                        }
+                      >
+                        Profile
+                      </button>
+                    </li>
+                    {!hideDelete && (
                       <li>
                         <button
                           className="dropdown-item"
@@ -268,14 +297,15 @@ const StudentList = ({
                           Delete
                         </button>
                       </li>
-                    </ul>
-                  </div>
+                    )}
+                  </ul>
+                </div>
               )}
 
-              {!hideEmotion && student.emotion && !isRequest && (
+              {!hideEmotion && student.moodCode && !isRequest && (
                 <img
-                  src={getEmotionImage(student.emotion.code)}
-                  alt={student.emotion.code}
+                  src={getEmotionImage(student.moodCode)}
+                  alt={student.moodCode}
                   className={`emotion-icon emotion-icon-${size}`}
                 />
               )}
@@ -299,7 +329,7 @@ const StudentList = ({
             </div>
           ))
         ) : (
-          <p>No students available</p>
+          <span>No students to display</span>
         )}
       </div>
     </div>

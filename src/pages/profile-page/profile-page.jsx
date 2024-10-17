@@ -255,6 +255,7 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
                   placeholder="First Name"
                   value={formData.firstName}
                   onChange={handleInputChange}
+                  maxLength={64}
                 />
                 <label htmlFor="firstName">
                   First Name<span className="text-danger">*</span>
@@ -271,6 +272,7 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
                   placeholder="Middle Name"
                   value={formData.middleName || ""}
                   onChange={handleInputChange}
+                  maxLength={64}
                 />
                 <label htmlFor="middleName">Middle Name</label>
                 {renderError("middleName")}
@@ -285,6 +287,7 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
                   placeholder="Last Name"
                   value={formData.lastName}
                   onChange={handleInputChange}
+                  maxLength={64}
                 />
                 <label htmlFor="lastName">
                   Last Name<span className="text-danger">*</span>
@@ -302,6 +305,7 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
                   value={formData.email || ""}
                   disabled={isAppAdmin && !isViewSelf}
                   onChange={handleInputChange}
+                  maxLength={64}
                 />
                 <label htmlFor="email">
                   Email<span className="text-danger">*</span>
@@ -319,6 +323,7 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
                     placeholder="Student Number"
                     value={formData.studentNumber || ""}
                     onChange={handleInputChange}
+                    maxLength={64}
                   />
                   <label htmlFor="studentNumber">
                     Student Number<span className="text-danger">*</span>
@@ -336,6 +341,7 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
                   placeholder="Phone Number"
                   value={formData.phoneNumber || ""}
                   onChange={handleInputChange}
+                  maxLength={64}
                 />
                 <label htmlFor="phoneNumber">Phone Number</label>
                 {renderError("phoneNumber")}
@@ -352,6 +358,7 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
                       placeholder="Password"
                       value={formData.password || ""}
                       onChange={handleInputChange}
+                      maxLength={64}
                     />
                     <label htmlFor="password">Password</label>
                     <button

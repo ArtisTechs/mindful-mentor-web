@@ -177,3 +177,8 @@
   width: 80%;
   margin-left: 1rem;
 }
+
+.selected-student {
+  background-color: var(--dark-primary-color);
+  color: white;
+}

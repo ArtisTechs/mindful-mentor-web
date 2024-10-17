@@ -79,6 +79,13 @@
   justify-content: center;
 }
 
+.appointment-reason {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
 .appointment-reason h3 {
   margin: 0;
   font-size: 1.1rem;

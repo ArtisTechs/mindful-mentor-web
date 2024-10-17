@@ -7,6 +7,7 @@ import {
   AppointmentStatusEnum,
   EErrorMessages,
   fetchAppointmentList,
+  getStudentsWithMoodToday,
   toastService,
   useGlobalContext,
 } from "../../shared";
@@ -15,12 +16,17 @@ const HomePage = ({ setFullLoadingHandler }) => {
   const { currentUserDetails, isAppAdmin } = useGlobalContext();
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [students, setStudents] = useState([]);
+  const [studentLoading, setStudentLoading] = useState(true);
 
   useEffect(() => {
     if (currentUserDetails.id) {
       loadAppointments();
     }
-  }, [currentUserDetails.id]);
+    if (isAppAdmin) {
+      loadStudentsWithMoodToday(); // Fetch students' mood data if user is an admin
+    }
+  }, [currentUserDetails.id, isAppAdmin]);
 
   const loadAppointments = async () => {
     setLoading(true);
@@ -32,7 +38,6 @@ const HomePage = ({ setFullLoadingHandler }) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Ensure we are passing userId only if the user is not an admin
       const userId = isAppAdmin ? null : currentUserDetails.id;
 
       const response = await fetchAppointmentList({
@@ -52,63 +57,41 @@ const HomePage = ({ setFullLoadingHandler }) => {
     }
   };
 
-  const students = [
-    {
-      id: 1,
-      firstName: "Miguel",
-      lastName: "Santos",
-      avatar: "avatar1.png",
-      emotion: { code: "motivated", description: "Motivated" },
-    },
-    {
-      id: 2,
-      firstName: "Carlos",
-      lastName: "Reyes",
-      avatar: "avatar2.png",
-      emotion: { code: "anxious", description: "Anxious" },
-    },
-    {
-      id: 3,
-      firstName: "Isabel",
-      lastName: "Garcia",
-      avatar: "avatar3.png",
-      emotion: { code: "frustrated", description: "Frustrated" },
-    },
-    {
-      id: 4,
-      firstName: "Diego",
-      lastName: "Morales",
-      avatar: "avatar3.png",
-      emotion: { code: "joy", description: "Joyful" },
-    },
-    {
-      id: 5,
-      firstName: "Lucia",
-      lastName: "Torres",
-      avatar: "avatar3.png",
-      emotion: { code: "calm", description: "Calm" },
-    },
-    {
-      id: 6,
-      firstName: "Emilio",
-      lastName: "Fernandez",
-      avatar: "avatar3.png",
-      emotion: { code: "sad", description: "Sad" },
-    },
-  ];
+  const loadStudentsWithMoodToday = async () => {
+    setStudentLoading(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const response = await getStudentsWithMoodToday({
+        sortBy: "firstName",
+      });
+      console.log(response);
+      setStudents(response);
+    } catch (error) {
+      toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+    } finally {
+      setStudentLoading(false);
+    }
+  };
 
   return (
     <div className="home-page">
       {!isAppAdmin && (
-        <>
-          <div className="emotion-picker-container">
-            <EmotionPicker />
-          </div>
-        </>
+        <div className="emotion-picker-container">
+          <EmotionPicker />
+        </div>
       )}
 
       <div className="home-page-cards">
-        {isAppAdmin && <StudentList students={students} size="half" />}
+        {isAppAdmin && (
+          <StudentList
+            students={students}
+            size="half"
+            loading={studentLoading}
+            hideDelete={true}
+          />
+        )}
+
         <UpcomingEvents
           appointments={appointments}
           isAppAdmin={isAppAdmin}

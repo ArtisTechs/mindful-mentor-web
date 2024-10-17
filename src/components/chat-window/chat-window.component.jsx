@@ -1,49 +1,111 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Popover, OverlayTrigger } from "react-bootstrap";
 import "./chat-window.component.css";
-import { STORAGE_KEY, stringAvatar } from "../../shared";
+import {
+  AccountStatusEnum,
+  arrangeMessagesByTimestamp,
+  EErrorMessages,
+  fetchCounselorList,
+  STORAGE_KEY,
+  stringAvatar,
+  toastService,
+  useGlobalContext,
+  webSocketService,
+} from "../../shared";
 import { Avatar } from "@mui/material";
 
-const counselor = {
-  email: "suarezestanislaojose@gmail.com",
-  firstName: "Maria",
-  lastName: "Cruz",
-  phoneNumber: "9511682096",
-  availableSchedule: "Mon - Fri (8:00 am - 5:00 pm)",
-  avatar: "",
-  isActive: true,
-};
-
-const ChatWindow = () => {
-  const [messages, setMessages] = useState([]);
+const ChatWindow = ({ setFullLoadingHandler }) => {
+  const { currentUserDetails } = useGlobalContext(); // Destructure currentUserDetails from context
+  const [messages, setMessages] = useState([]); // Start with an empty message array
   const [inputValue, setInputValue] = useState("");
   const chatBodyRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false); // Track chat visibility
+  const [isVisible, setIsVisible] = useState(false);
+  const [counselorDetails, setCounselorDetails] = useState(null); // Initialize with null
 
+  // Fetch counselor details when the current user changes
   useEffect(() => {
-    const savedMessages =
-      JSON.parse(localStorage.getItem(STORAGE_KEY.MESSAGES)) || [];
+    fetchCounselorDetails();
+  }, [currentUserDetails]);
 
-    if (savedMessages.length === 0) {
-      const sampleMessage = {
-        text: "Hello! How can I assist you today?",
-        sender: "counselor",
-      };
-      savedMessages.push(sampleMessage);
-      localStorage.setItem(STORAGE_KEY.MESSAGES, JSON.stringify(savedMessages));
+  const fetchCounselorDetails = async () => {
+    setFullLoadingHandler(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const response = await fetchCounselorList({
+        status: AccountStatusEnum.ACTIVE,
+      });
+
+      // Set the first counselor's details; ensure there's at least one
+      if (response.content && response.content.length > 0) {
+        setCounselorDetails(response.content[0]);
+      }
+    } catch (error) {
+      toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+    } finally {
+      setFullLoadingHandler(false);
     }
+  };
 
-    setMessages(savedMessages);
-  }, []);
+  // Ensure counselorDetails is available before connecting
+  useEffect(() => {
+    if (counselorDetails) {
+      const receiverId = counselorDetails.id;
+      const userId = currentUserDetails.id;
 
-  // Scroll to the latest message when messages change
+      // WebSocket message handler to receive messages
+      const handleReceivedMessage = (message) => {
+        setMessages((prevMessages) => {
+          const updatedMessages = [...prevMessages, message];
+          return updatedMessages;
+        });
+      };
+
+      // Connect to WebSocket for receiving messages
+      webSocketService.connect(userId, handleReceivedMessage);
+
+      // Fetch message history
+      const fetchHistory = async () => {
+        setFullLoadingHandler(true);
+        try {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          const senderHistory = await webSocketService.fetchMessageHistory(
+            userId,
+            receiverId
+          );
+          const receiverHistory = await webSocketService.fetchMessageHistory(
+            receiverId,
+            userId
+          );
+          const messageHistory = arrangeMessagesByTimestamp(
+            senderHistory,
+            receiverHistory
+          );
+          setMessages(messageHistory);
+        } catch (error) {
+          toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+        } finally {
+          setFullLoadingHandler(false);
+        }
+      };
+
+      fetchHistory();
+
+      // Disconnect WebSocket when the component is unmounted or counselor changes
+      return () => {
+        webSocketService.disconnect();
+      };
+    }
+  }, [counselorDetails, currentUserDetails]); // Add currentUserDetails dependency
+
+  // Auto-scroll to bottom when new messages are added
   useEffect(() => {
     if (chatBodyRef.current) {
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
   }, [messages]);
 
-  // Scroll to the latest message when the chat window becomes visible
+  // Auto-scroll when chat window is visible
   useEffect(() => {
     if (isVisible && chatBodyRef.current) {
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
@@ -51,15 +113,24 @@ const ChatWindow = () => {
   }, [isVisible]);
 
   const handleSendMessage = () => {
-    if (inputValue.trim()) {
-      const newMessage = { text: inputValue, sender: "user" };
-      const updatedMessages = [...messages, newMessage];
-      setMessages(updatedMessages);
-      localStorage.setItem(
-        STORAGE_KEY.MESSAGES,
-        JSON.stringify(updatedMessages)
-      );
-      setInputValue(""); // Clear input field
+    const messageText = String(inputValue).trim();
+
+    if (messageText) {
+      try {
+        webSocketService.sendMessage(
+          messageText,
+          counselorDetails.id,
+          currentUserDetails.id,
+          currentUserDetails.id
+        );
+      } catch (error) {
+        toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+      }
+      setInputValue("");
+    }
+
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
   };
 
@@ -70,28 +141,33 @@ const ChatWindow = () => {
   };
 
   const handleToggle = () => setIsVisible(!isVisible);
-  const handleClose = () => setIsVisible(false); // Explicitly close the popover
+  const handleClose = () => setIsVisible(false);
 
   const popover = (
     <Popover id="chat-popover">
       <div className={`chat-window ${isVisible ? "open" : "close"}`}>
         <div className="chat-header">
           <div className="chat-avatar">
-            <Avatar
-              {...stringAvatar(
-                `${counselor.firstName}`,
-                `${counselor.lastName}`,
-                40,
-                18
-              )}
-              src={counselor.avatar}
-            />
-            <div
+            {counselorDetails && (
+              <Avatar
+                {...stringAvatar(
+                  `${counselorDetails?.firstName}`,
+                  `${counselorDetails?.lastName}`,
+                  40,
+                  18
+                )}
+                src={counselorDetails?.avatar}
+              />
+            )}
+            {/* <div
               className={`is-active ${
-                counselor.isActive ? "active" : "inactive"
+                counselorDetails?.isActive ? "active" : "inactive"
               }`}
-            ></div>
-            <h3>Chat with Counselor</h3>
+            ></div> */}
+            <h3>
+              {`${counselorDetails?.firstName} ${counselorDetails?.lastName}`}{" "}
+              (Counselor)
+            </h3>
           </div>
 
           <button className="close-btn-chat" onClick={handleClose}>
@@ -100,9 +176,14 @@ const ChatWindow = () => {
         </div>
         <div className="chat-body" ref={chatBodyRef}>
           {messages.length > 0 ? (
-            messages.map((msg, index) => (
-              <div key={index} className={`chat-bubble ${msg.sender}`}>
-                {msg.text}
+            messages.map((msg) => (
+              <div
+                key={msg.id} // Use message id as key
+                className={`chat-bubble ${
+                  msg.senderId === currentUserDetails.id ? "user" : "counselor"
+                }`}
+              >
+                {msg.content}
               </div>
             ))
           ) : (
@@ -116,6 +197,7 @@ const ChatWindow = () => {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type a message..."
+            maxLength={255}
           />
           <button className="send-btn" onClick={handleSendMessage}>
             <i className="fas fa-paper-plane"></i>

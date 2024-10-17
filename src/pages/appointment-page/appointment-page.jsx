@@ -160,6 +160,7 @@ const AppointmentPage = ({ setFullLoadingHandler }) => {
                   value={reason}
                   onChange={handleReasonChange}
                   required
+                  maxLength={255}
                 />
               </Form.Group>
 

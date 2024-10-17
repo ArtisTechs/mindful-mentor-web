@@ -12,14 +12,20 @@ import {
   toastService,
 } from "../../shared";
 import { DateFormat } from "../../shared/enum/date-format.enum";
+import { useLocation } from "react-router-dom";
 
 const CalendarPage = ({ setFullLoadingHandler }) => {
+  const location = useLocation();
+  const { student } = location.state || {};
   const { currentUserDetails, isAppAdmin } = useGlobalContext();
   const [moodsData, setMoodsData] = useState([]);
   const [students, setStudents] = useState([]);
   const [dateRange, setDateRange] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+
+  const [selectedStudent, setSelectedStudent] = useState(() => {
+    return student || null;
+  });
 
   // Fetch moods whenever the date range or current user changes
   useEffect(() => {
@@ -116,6 +122,7 @@ const CalendarPage = ({ setFullLoadingHandler }) => {
             isItemClickable={true}
             loading={loading}
             onSelectStudent={handleSelectStudent}
+            isSelectedStudent={selectedStudent}
           />
         </div>
       )}

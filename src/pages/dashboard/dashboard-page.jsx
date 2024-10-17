@@ -74,7 +74,12 @@ const DashboardPage = ({ onLogout, setFullLoadingHandler }) => {
           {isAppAdmin && (
             <>
               <Route path={ROUTES.STUDENTS} element={<StudentListPage />} />
-              <Route path={ROUTES.CHATS} element={<ChatPage />} />
+              <Route
+                path={ROUTES.CHATS}
+                element={
+                  <ChatPage setFullLoadingHandler={setFullLoadingHandler} />
+                }
+              />
               <Route
                 path={ROUTES.ACCOUNT_REQUEST}
                 element={<AccountRequestPage />}
@@ -84,7 +89,9 @@ const DashboardPage = ({ onLogout, setFullLoadingHandler }) => {
         </Routes>
       </div>
 
-      {!isAppAdmin && <ChatWindow />}
+      {!isAppAdmin && (
+        <ChatWindow setFullLoadingHandler={setFullLoadingHandler} />
+      )}
 
       <OffCanvasDashboardMenu
         show={showOffCanvas}

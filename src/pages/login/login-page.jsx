@@ -143,7 +143,6 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
               toastService.show(ESuccessMessages.REGISTER, "success-toast");
               setFullLoadingHandler(false);
             } catch (error) {
-              console.log("Register failed:", error.errorCode);
               if (error.errorCode === "EMAIL_ALREADY_REGISTERED") {
                 newErrors.email = error.message;
                 setErrors(newErrors);
@@ -190,17 +189,20 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
             };
             const user = await userSignIn(userDetails);
             toastService.show(ESuccessMessages.LOGIN, "success-toast");
-            console.log(user);
             onLoginSuccess(user);
             setFullLoadingHandler(false);
           } catch (error) {
-            console.log("Login failed:", error.errorCode);
             if (error.errorCode === "EMAIL_NOT_REGISTERED") {
               newErrors.email = EErrorMessages.EMAIL_UNREGISTERED;
               setErrors(newErrors);
             } else if (error.errorCode === "WRONG_PASSWORD") {
               newErrors.password = EErrorMessages.PASSWORD_INCORRECT;
               setErrors(newErrors);
+            } else if (
+              error.message ===
+              "User account is not active. Wait for the counselor for approval."
+            ) {
+              toastService.show(error.message, "danger-toast");
             } else {
               toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
             }
@@ -279,6 +281,7 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
                   placeholder="First name"
                   value={formData.firstName}
                   onChange={handleChange}
+                  maxLength={64}
                 />
                 <label htmlFor="firstName">
                   First Name<span className="text-danger">*</span>
@@ -299,6 +302,7 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
                   placeholder="Middle name"
                   value={formData.middleName}
                   onChange={handleChange}
+                  maxLength={64}
                 />
                 <label htmlFor="middleName">Middle Name</label>
                 {errors.middleName && (
@@ -317,6 +321,7 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
                   placeholder="Last name"
                   value={formData.lastName}
                   onChange={handleChange}
+                  maxLength={64}
                 />
                 <label htmlFor="lastName">
                   Last Name<span className="text-danger">*</span>
@@ -337,6 +342,7 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
                   placeholder="Student number"
                   value={formData.studentNumber}
                   onChange={handleChange}
+                  maxLength={64}
                 />
                 <label htmlFor="studentNumber">
                   Student Number<span className="text-danger">*</span>
@@ -357,6 +363,7 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
                   placeholder="Phone number"
                   value={formData.phoneNumber}
                   onChange={handleChange}
+                  maxLength={64}
                 />
                 <label htmlFor="phoneNumber">
                   Phone Number<span className="text-danger">*</span>
@@ -381,6 +388,7 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
                   placeholder="Your email here"
                   value={formData.email}
                   onChange={handleChange}
+                  maxLength={64}
                 />
                 <label htmlFor="email">Email</label>
                 {errors.email && (
@@ -399,6 +407,7 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
                   placeholder="Your password here"
                   value={formData.password}
                   onChange={handleChange}
+                  maxLength={64}
                 />
                 <label htmlFor="password">Password</label>
                 <button

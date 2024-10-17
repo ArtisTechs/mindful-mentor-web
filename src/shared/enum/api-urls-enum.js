@@ -1,6 +1,8 @@
 export const API_URL = Object.freeze({
+  MAIN_URL: "//localhost:8080",
   BASE_URL: "http://localhost:8080/api", // Change this in production
   USERS: "/users",
+  USER: "/user",
   LOGIN: "/login",
   SIGNUP: "/signup",
   PROFILE: "/profile",
@@ -12,4 +14,11 @@ export const API_URL = Object.freeze({
   UPLOAD_PROFILE_PICTURE: "/uploadProfilePicture",
   MOODS: "/moods",
   ADD: "/add",
+  CHAT: "/chat",
+  SEND_MESSAGE: "/sendMessage",
+  APP: "/app",
+  QUEUE: "/queue",
+  MESSAGES: "/messages",
+  RECEIVER: "/receiver",
+  STUDENT_MOOD_TODAY: "/students-with-mood-today",
 });

@@ -68,3 +68,34 @@ export const updateMoodById = async (id, moodDetails) => {
     throw error.response;
   }
 };
+
+// Get students with mood today
+export const getStudentsWithMoodToday = async (filters) => {
+  try {
+    const {
+      sortBy = "firstName", // Default sort by firstName
+      sortAscending = true, // Default sorting order is ascending
+      page = 0, // Default page number
+      size = null, // Default page size
+    } = filters;
+
+    const response = await axios.get(
+      `${moodURL}${API_URL.STUDENT_MOOD_TODAY}`,
+      {
+        params: {
+          sortBy,
+          sortAscending,
+          page,
+          size,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          ...(storedToken ? { Authorization: `Bearer ${storedToken}` } : {}),
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
