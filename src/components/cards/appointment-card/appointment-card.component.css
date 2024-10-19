@@ -24,6 +24,13 @@
   align-items: center;
 }
 
+.appointment-card-labels {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .user-avatar {
   width: 50px;
   height: 50px;
@@ -33,12 +40,14 @@
 
 .user-details {
   margin-left: 1rem;
-  width: 40%;
+  width: 150px;
+  margin-bottom: 10px;
 }
 
 .user-details h3 {
   margin: 0;
   font-size: 18px;
+  word-wrap: break-word;
 }
 
 .user-details p {
@@ -50,6 +59,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-bottom: 10px;
 }
 
 .appointment-date h3 {
@@ -60,6 +70,32 @@
 .appointment-date p {
   margin: 5px 0 0;
   font-size: 1rem;
+  word-wrap: break-word;
+}
+
+.appointment-date {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.appointment-reason {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.appointment-reason h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.appointment-reason p {
+  margin: 5px 0 0;
+  font-size: 1rem;
+  word-wrap: break-word;
+  width: 150px;
 }
 
 .appointment-card-divider {
@@ -78,6 +114,11 @@
     margin-left: 0;
     width: 80%;
     margin-top: 1rem;
+  }
+
+  .appointment-card-labels {
+    flex-direction: column;
+    align-items: normal;
   }
 
   .appointment-date {

@@ -10,4 +10,5 @@ export const ROUTES = {
   APPOINTMENTS: "/appointments",
   STUDENTS: "/students",
   CHATS: "/chats",
+  ACCOUNT_REQUEST: "/accountRequest",
 };

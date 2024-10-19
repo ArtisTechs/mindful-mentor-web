@@ -1,3 +1,16 @@
+import { STORAGE_KEY } from "../keys";
+
+export const getTokenAsync = () => {
+  return new Promise((resolve) => {
+    const token = localStorage.getItem(STORAGE_KEY.TOKEN);
+    if (token) {
+      resolve(token);
+    } else {
+      resolve(null); // No token, resolve as null
+    }
+  });
+};
+
 export const validateEmail = (email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
@@ -96,3 +109,51 @@ export function stringAvatar(firstName, lastName, size, fontSize) {
     alt: `${firstName || ""} ${lastName || ""}`,
   };
 }
+
+export function removeEmptyFields(formData) {
+  const cleanedData = {};
+
+  Object.keys(formData).forEach((key) => {
+    const value = formData[key];
+
+    // Check if the value is a string before calling trim
+    if (typeof value === "string" && value.trim() !== "") {
+      cleanedData[key] = value.trim();
+    } else if (value !== null && value !== undefined) {
+      // For non-string values, just add them as is
+      cleanedData[key] = value;
+    }
+  });
+
+  return cleanedData;
+}
+
+// Capitalizes the first letter of each word in the string
+export const capitalizeText = (text) => {
+  if (!text) return text;
+  return text
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
+export const sortByLatestDateOrLastName = (combinedData) => {
+  return combinedData.sort((a, b) => {
+    const dateA = a.latestDate ? new Date(a.latestDate) : null;
+    const dateB = b.latestDate ? new Date(b.latestDate) : null;
+
+    if (dateA && dateB) {
+      return dateB - dateA;
+    }
+
+    if (dateA && !dateB) return -1;
+    if (!dateA && dateB) return 1;
+
+    const lastNameA = a.lastName.toLowerCase();
+    const lastNameB = b.lastName.toLowerCase();
+    if (lastNameA < lastNameB) return -1;
+    if (lastNameA > lastNameB) return 1;
+
+    return 0;
+  });
+};

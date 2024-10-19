@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./emotion-picker.component.css";
 
 // Importing emotion images
@@ -8,21 +8,94 @@ import CalmImage from "../../assets/img/Calm.png";
 import AnxiousImage from "../../assets/img/Anxious.png";
 import SadImage from "../../assets/img/Sad.png";
 import FrustratedImage from "../../assets/img/Frustrated.png";
+import {
+  addMood,
+  getMoods,
+  emotionCode,
+  updateMoodById,
+  useGlobalContext,
+  toastService,
+  EErrorMessages,
+} from "../../shared";
 
 const emotions = [
-  { name: "Joyful", image: JoyfulImage },
-  { name: "Motivated", image: MotivatedImage },
-  { name: "Calm", image: CalmImage },
-  { name: "Anxious", image: AnxiousImage },
-  { name: "Sad", image: SadImage },
-  { name: "Frustrated", image: FrustratedImage },
+  { image: JoyfulImage, ...emotionCode.JOY },
+  { image: MotivatedImage, ...emotionCode.MOTIVATED },
+  { image: CalmImage, ...emotionCode.CALM },
+  { image: AnxiousImage, ...emotionCode.ANXIOUS },
+  { image: SadImage, ...emotionCode.SAD },
+  { image: FrustratedImage, ...emotionCode.FRUSTRATED },
 ];
 
 const EmotionPicker = () => {
+  const { currentUserDetails } = useGlobalContext();
   const [selectedEmotion, setSelectedEmotion] = useState("");
+  const [todayMoodId, setTodayMoodId] = useState(null);
 
-  const handleEmotionClick = (emotionName) => {
-    setSelectedEmotion(emotionName);
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  useEffect(() => {
+    if (currentUserDetails.id) {
+      const fetchUserMood = async () => {
+        const today = getTodayDate();
+        try {
+          const moods = await getMoods({
+            userId: currentUserDetails.id,
+            startDate: today,
+            endDate: today,
+          });
+
+          if (moods.length > 0) {
+            const todayMood = moods[0]; // Assuming there is only one mood for today
+            setSelectedEmotion(todayMood.mood.description);
+            setTodayMoodId(todayMood.id); // Store the ID of today's mood
+          }
+        } catch (error) {
+          toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+        }
+      };
+
+      fetchUserMood();
+    }
+  }, [currentUserDetails]);
+
+  const handleEmotionClick = async (emotion) => {
+    setSelectedEmotion(emotion.description);
+
+    const moodDetails = {
+      userId: currentUserDetails.id,
+      date: getTodayDate(),
+      mood: {
+        code: emotion.code,
+        description: emotion.description,
+      },
+    };
+
+    try {
+      if (todayMoodId) {
+        // If the user already has a mood for today, update it
+        const updatedMood = await updateMoodById(todayMoodId, moodDetails);
+        toastService.show(
+          `You have successfully change your mood today to "${moodDetails.mood.description}".`,
+          "success-toast"
+        );
+      } else {
+        // If no mood exists, add a new one
+        const addedMood = await addMood(moodDetails);
+        toastService.show(
+          `You have successfully choose your mood today to "${moodDetails.mood.description}".`,
+          "success-toast"
+        );
+      }
+    } catch (error) {
+      toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+    }
   };
 
   return (
@@ -34,16 +107,16 @@ const EmotionPicker = () => {
           <div
             key={index}
             className={`emotion-btn ${
-              selectedEmotion === emotion.name ? "selected" : ""
+              selectedEmotion === emotion.description ? "selected" : ""
             }`}
-            onClick={() => handleEmotionClick(emotion.name)}
+            onClick={() => handleEmotionClick(emotion)}
           >
             <img
               src={emotion.image}
-              alt={emotion.name}
+              alt={emotion.description}
               className="emotion-image"
             />
-            <p className="emotion-name">{emotion.name}</p>
+            <p className="emotion-name">{emotion.description}</p>
           </div>
         ))}
       </div>

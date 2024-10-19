@@ -13,59 +13,86 @@ import "./styles/_variables.css";
 import "./styles/_globalStyles.css";
 import LoginPage from "./pages/login/login-page";
 import ToastMessage from "./components/toast-message/toast-message";
-import { STORAGE_KEY, toastService, ROUTES } from "./shared";
+import {
+  STORAGE_KEY,
+  toastService,
+  modalService,
+  ROUTES,
+  RoleEnum,
+  EErrorMessages,
+  getUserDetails,
+} from "./shared";
 import FullLoaderComponent from "./components/full-loader/full-loader-component";
 import DashboardPage from "./pages/dashboard/dashboard-page";
 import { useGlobalContext } from "./shared/context";
+import ConfirmationModal from "./components/confirmation-modal-component/confirmation-modal.component";
 
 function App() {
+  // State for managing toast notifications
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastVariant, setToastVariant] = useState("success");
+
+  // State for loading screen
   const [isLoading, setIsLoading] = useState(true);
+
+  // State for logged-in status
   const [loggedIn, setLoggedIn] = useState(false);
-  const { currentUserDetails, setCurrentUserDetails, setIsAppAdmin } =
-    useGlobalContext();
 
-  const appAdmin = {
-    email: "appadmin@gmail.com",
-    firstName: "App",
-    lastName: "Admin",
-    middleName: "",
-    password: "Test1234!",
-    phoneNumber: "9511682096",
-    reEnterPassword: "Test1234!",
-    isAdmin: true,
-  };
+  // Get user details and admin status from context
+  const {
+    currentUserDetails,
+    setCurrentUserDetails,
+    setIsAppAdmin,
+    setAdminMessages,
+    setIsMessagesFetch,
+  } = useGlobalContext();
 
-  // Check if the app admin is already registered based on email
-  const registeredUsers =
-    JSON.parse(localStorage.getItem(STORAGE_KEY.USERS)) || [];
+  // State for confirmation modal
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [modalData, setModalData] = useState({
+    title: "",
+    message: "",
+    confirmText: "",
+    confirmButtonClass: "",
+    onConfirm: null,
+    onCancel: null,
+  });
 
-  const adminExists = registeredUsers.some(
-    (user) => user.email === appAdmin.email
-  );
-
-  if (!adminExists) {
-    const updatedUsers = [...registeredUsers, appAdmin];
-    localStorage.setItem(STORAGE_KEY.USERS, JSON.stringify(updatedUsers));
-  }
-
+  // Effect to check login status and load user details
   useEffect(() => {
-    const storedProfile = localStorage.getItem(STORAGE_KEY.PROFILE_DETAILS);
-    if (storedProfile) {
-      const profileData = JSON.parse(storedProfile);
-      setCurrentUserDetails(profileData);
-      setLoggedIn(true);
-      setIsAppAdmin(profileData.role === "COUNSELOR");
-    }
+    const profileID = localStorage.getItem(STORAGE_KEY.PROFILE_ID);
+    const role = localStorage.getItem(STORAGE_KEY.ROLE);
 
-    const timer = setTimeout(() => {
+    if (profileID) {
+      setLoggedIn(true);
+      setIsAppAdmin(role === RoleEnum.COUNSELOR);
+
+      const fetchUserDetails = async () => {
+        try {
+          const storedProfile = await getUserDetails(profileID);
+          setCurrentUserDetails(storedProfile);
+          setIsAppAdmin(storedProfile.role === RoleEnum.COUNSELOR);
+        } catch (error) {
+          toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+          handleLogout();
+        }
+      };
+
+      fetchUserDetails();
+
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    } else {
       setIsLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
+      handleLogout();
+    }
   }, [setCurrentUserDetails, setIsAppAdmin]);
 
+  // Effect to register the global toast service
   useEffect(() => {
     toastService.registerShowToastCallback((message, variant) => {
       setToastMessage(message);
@@ -74,23 +101,63 @@ function App() {
     });
   }, []);
 
-  // Handle successful login and store profile details in localStorage
-  const handleLoginSuccess = (profileData) => {
-    localStorage.setItem(
-      STORAGE_KEY.PROFILE_DETAILS,
-      JSON.stringify(profileData)
+  // Effect to register the global modal service
+  useEffect(() => {
+    modalService.registerShowModalCallback(
+      ({
+        title,
+        message,
+        onConfirm,
+        onCancel,
+        confirmText,
+        confirmButtonClass,
+      }) => {
+        setModalData({
+          title,
+          message,
+          onConfirm,
+          onCancel,
+          confirmText,
+          confirmButtonClass,
+        });
+        setShowConfirmModal(true);
+      }
     );
-    setCurrentUserDetails(profileData); // Update global state on login
+
+    modalService.registerHideModalCallback(() => {
+      setShowConfirmModal(false);
+    });
+  }, []);
+
+  // Handle successful login and store profile details
+  const handleLoginSuccess = (profileData) => {
+    localStorage.setItem(STORAGE_KEY.PROFILE_ID, profileData.id);
+    localStorage.setItem(STORAGE_KEY.ROLE, profileData.role);
+    localStorage.setItem(STORAGE_KEY.TOKEN, profileData.token);
+    setCurrentUserDetails(profileData);
     setLoggedIn(true);
-    setIsAppAdmin(profileData.isAdmin); // Update admin status on login
+    setIsAppAdmin(profileData.role === RoleEnum.COUNSELOR);
   };
 
-  // Handle logout and clear localStorage
+  // Handle logout, clearing localStorage and resetting state
   const handleLogout = () => {
-    localStorage.removeItem(STORAGE_KEY.PROFILE_DETAILS);
-    setCurrentUserDetails(null); // Clear global state on logout
+    localStorage.clear();
+    setCurrentUserDetails(null);
     setLoggedIn(false);
-    setIsAppAdmin(false); // Reset admin status on logout
+    setIsAppAdmin(false);
+    setAdminMessages([]);
+    setIsMessagesFetch(false);
+  };
+
+  // Confirm modal actions
+  const handleConfirm = () => {
+    if (modalData.onConfirm) modalData.onConfirm();
+    setShowConfirmModal(false);
+  };
+
+  const handleCancel = () => {
+    if (modalData.onCancel) modalData.onCancel();
+    setShowConfirmModal(false);
   };
 
   return (
@@ -101,6 +168,7 @@ function App() {
         <header className="app-header"></header>
         <div className="app-body">
           <Routes>
+            {/* Login Route */}
             <Route
               path={ROUTES.LOGIN}
               element={
@@ -115,18 +183,22 @@ function App() {
               }
             />
 
-            {/* Protected Dashboard route, redirect to login if not logged in */}
+            {/* Protected Dashboard Route */}
             <Route
               path={`${ROUTES.WEB}/*`}
               element={
                 loggedIn ? (
-                  <DashboardPage onLogout={handleLogout} />
+                  <DashboardPage
+                    setFullLoadingHandler={setIsLoading}
+                    onLogout={handleLogout}
+                  />
                 ) : (
                   <Navigate to={ROUTES.LOGIN} />
                 )
               }
             />
 
+            {/* Redirect Root to Login or Dashboard */}
             <Route
               path="/"
               element={
@@ -138,16 +210,29 @@ function App() {
               }
             />
 
+            {/* Catch-all route redirects to login */}
             <Route path="*" element={<Navigate to={ROUTES.LOGIN} />} />
           </Routes>
         </div>
         <footer className="app-footer"></footer>
 
+        {/* Toast Notifications */}
         <ToastMessage
           show={showToast}
           setShow={setShowToast}
           message={toastMessage}
           variant={toastVariant}
+        />
+
+        {/* Confirmation Modal */}
+        <ConfirmationModal
+          show={showConfirmModal}
+          title={modalData.title}
+          message={modalData.message}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          confirmText={modalData.confirmText}
+          confirmButtonClass={modalData.confirmButtonClass}
         />
       </div>
     </Router>

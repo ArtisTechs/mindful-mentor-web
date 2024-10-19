@@ -1,8 +1,8 @@
 export const emotionCode = Object.freeze({
-  JOY: "joy",
-  MOTIVATED: "motivated",
-  CALM: "calm",
-  ANXIOUS: "anxious",
-  SAD: "sad",
-  FRUSTRATED: "frustrated",
+  JOY: { code: "joy", description: "Joyful" },
+  MOTIVATED: { code: "motivated", description: "Motivated" },
+  CALM: { code: "calm", description: "Calm" },
+  ANXIOUS: { code: "anxious", description: "Anxious" },
+  SAD: { code: "sad", description: "Sad" },
+  FRUSTRATED: { code: "frustrated", description: "Frustrated" },
 });

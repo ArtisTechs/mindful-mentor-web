@@ -16,4 +16,5 @@ export const EErrorMessages = Object.freeze({
   APPOINTMENT_DUPLICATE:
     "An appointment on this date already exists. Please select a different date.",
   DATE_REQUIRED: "Please select a date for your appointment.",
+  PICTURE_UPLOAD_FAILED: "Profile Picture Failed to Upload.",
 });

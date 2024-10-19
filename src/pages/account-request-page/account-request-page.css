@@ -1,4 +1,4 @@
-.student-list-page {
+.account-request-page {
   height: 90vh;
   display: flex;
   align-items: center;
@@ -6,7 +6,7 @@
   flex-direction: column;
 }
 
-.student-list-search-bar {
+.account-request-search-bar {
   width: 80%;
   margin: 1rem 0;
 }

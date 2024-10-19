@@ -160,6 +160,23 @@
   cursor: pointer;
 }
 
+.messages-count {
+  background-color: var(--danger-color);
+  position: fixed;
+  right: 3rem;
+  bottom: 6rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  border-radius: 20px;
+  padding-bottom: 2px;
+}
+
 @media (max-width: 820px) {
   .chat-window {
     bottom: 0;

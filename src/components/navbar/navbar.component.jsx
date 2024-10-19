@@ -14,7 +14,9 @@ const Navbar = ({ title, toggleOffCanvas, onLogout, profile }) => {
   };
 
   const handleProfileClick = () => {
-    navigate(`${ROUTES.WEB}${ROUTES.PROFILE}`); // Use navigate for programmatic navigation
+    navigate(`${ROUTES.WEB}${ROUTES.PROFILE}`, {
+      state: { isViewSelf: true },
+    });
   };
 
   return (
@@ -50,6 +52,7 @@ const Navbar = ({ title, toggleOffCanvas, onLogout, profile }) => {
                 16
               )}
               alt={`${profile.firstName} ${profile.lastName}`}
+              src={profile.profilePicture}
             />
           </button>
 

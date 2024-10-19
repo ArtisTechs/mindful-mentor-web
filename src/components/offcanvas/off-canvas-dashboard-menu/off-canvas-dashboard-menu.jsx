@@ -5,17 +5,22 @@ import {
   OffcanvasBody,
   Button,
 } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./off-canvas-dashboard-menu.css";
 import { ROUTES, useGlobalContext } from "../../../shared";
 
 const OffCanvasDashboardMenu = ({ show, handleClose }) => {
   const { currentUserDetails, isAppAdmin } = useGlobalContext();
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
 
   const handleNavigation = (path) => {
     handleClose();
     navigate(path);
+  };
+
+  const isActive = (path) => {
+    return location.pathname === path ? "dashbaord-menu-item-active" : "";
   };
 
   return (
@@ -35,7 +40,9 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
           <ul className="list-unstyled">
             <li>
               <Button
-                className="dashbaord-menu-item"
+                className={`dashbaord-menu-item ${isActive(
+                  `${ROUTES.WEB}${ROUTES.DASHBOARD}`
+                )}`}
                 onClick={() =>
                   handleNavigation(`${ROUTES.WEB}${ROUTES.DASHBOARD}`)
                 }
@@ -47,7 +54,9 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
               <>
                 <li>
                   <Button
-                    className="dashbaord-menu-item"
+                    className={`dashbaord-menu-item ${isActive(
+                      `${ROUTES.WEB}${ROUTES.CHATS}`
+                    )}`}
                     onClick={() =>
                       handleNavigation(`${ROUTES.WEB}${ROUTES.CHATS}`)
                     }
@@ -57,7 +66,9 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                 </li>
                 <li>
                   <Button
-                    className="dashbaord-menu-item"
+                    className={`dashbaord-menu-item ${isActive(
+                      `${ROUTES.WEB}${ROUTES.STUDENTS}`
+                    )}`}
                     onClick={() =>
                       handleNavigation(`${ROUTES.WEB}${ROUTES.STUDENTS}`)
                     }
@@ -69,7 +80,9 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
             )}
             <li>
               <Button
-                className="dashbaord-menu-item"
+                className={`dashbaord-menu-item ${isActive(
+                  `${ROUTES.WEB}${ROUTES.CALENDAR}`
+                )}`}
                 onClick={() =>
                   handleNavigation(`${ROUTES.WEB}${ROUTES.CALENDAR}`)
                 }
@@ -78,19 +91,11 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
               </Button>
             </li>
 
-            {/* <li>
-              <Button
-                className="dashbaord-menu-item"
-                onClick={() =>
-                  handleNavigation(`${ROUTES.WEB}${ROUTES.COUNSELOR}`)
-                }
-              >
-                Counselors
-              </Button>
-            </li> */}
             <li>
               <Button
-                className="dashbaord-menu-item"
+                className={`dashbaord-menu-item ${isActive(
+                  `${ROUTES.WEB}${ROUTES.APPOINTMENTS}`
+                )}`}
                 onClick={() =>
                   handleNavigation(`${ROUTES.WEB}${ROUTES.APPOINTMENTS}`)
                 }
@@ -98,6 +103,22 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                 Appointment
               </Button>
             </li>
+            {isAppAdmin && (
+              <>
+                <li>
+                  <Button
+                    className={`dashbaord-menu-item ${isActive(
+                      `${ROUTES.WEB}${ROUTES.ACCOUNT_REQUEST}`
+                    )}`}
+                    onClick={() =>
+                      handleNavigation(`${ROUTES.WEB}${ROUTES.ACCOUNT_REQUEST}`)
+                    }
+                  >
+                    Account Request
+                  </Button>
+                </li>
+              </>
+            )}
           </ul>
         </OffcanvasBody>
       </Offcanvas>
