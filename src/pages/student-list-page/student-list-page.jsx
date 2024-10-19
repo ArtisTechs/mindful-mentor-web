@@ -32,6 +32,8 @@ const StudentListPage = () => {
       const response = await fetchStudentList({
         searchName: debouncedSearchTerm || undefined,
         status: AccountStatusEnum.ACTIVE,
+        ignorePagination: true,
+        sortBy: "lastName",
       });
       setStudents(response.content);
     } catch (error) {

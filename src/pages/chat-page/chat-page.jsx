@@ -6,9 +6,12 @@ import { Avatar } from "@mui/material";
 import {
   AccountStatusEnum,
   arrangeMessagesByTimestamp,
+  combineMessagesBySender,
   EErrorMessages,
   fetchStudentList,
   getMessagesForReceiver,
+  removeMessagesBySenderId,
+  sortByLatestDateOrLastName,
   stringAvatar,
   toastService,
   webSocketService,
@@ -18,8 +21,10 @@ import { useLocation } from "react-router-dom";
 const ChatPage = ({ setFullLoadingHandler }) => {
   const location = useLocation();
   const { student } = location.state || {};
-  const { currentUserDetails, isAppAdmin } = useGlobalContext();
+  const { currentUserDetails, isAppAdmin, adminMessages, setAdminMessages } =
+    useGlobalContext();
   const [students, setStudents] = useState([]);
+  const [formattedStudentsData, setFormattedStudentsData] = useState([]);
   const chatBodyRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -31,9 +36,17 @@ const ChatPage = ({ setFullLoadingHandler }) => {
   useEffect(() => {
     if (isAppAdmin) {
       loadStudents();
-      loadNewMessages();
     }
   }, [isAppAdmin]);
+
+  useEffect(() => {
+    if (students.length > 0) {
+      setFormattedStudentsData([]);
+      const combinedMessages = combineMessagesBySender(adminMessages, students);
+      const arrangeStudent = sortByLatestDateOrLastName(combinedMessages);
+      setFormattedStudentsData(arrangeStudent);
+    }
+  }, [students, adminMessages]);
 
   const loadStudents = async () => {
     setLoading(true);
@@ -41,23 +54,9 @@ const ChatPage = ({ setFullLoadingHandler }) => {
       await new Promise((resolve) => setTimeout(resolve, 500));
       const response = await fetchStudentList({
         status: AccountStatusEnum.ACTIVE,
+        ignorePagination: true,
       });
       setStudents(response.content);
-    } catch (error) {
-      toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadNewMessages = async () => {
-    setLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      const recentMessages = await getMessagesForReceiver(
-        currentUserDetails.id
-      );
-      console.log(recentMessages);
     } catch (error) {
       toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
     } finally {
@@ -119,6 +118,12 @@ const ChatPage = ({ setFullLoadingHandler }) => {
           currentUserDetails.id,
           selectedStudent.id
         );
+        const filteredMessages = removeMessagesBySenderId(
+          adminMessages,
+          selectedStudent.id
+        );
+
+        setAdminMessages(filteredMessages);
       } catch (error) {
         toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
       }
@@ -138,7 +143,7 @@ const ChatPage = ({ setFullLoadingHandler }) => {
     <div className="chat-page">
       <div className="student-list-chat">
         <StudentList
-          students={students}
+          students={formattedStudentsData}
           size="half"
           hideEmotion={true}
           hideOptions={true}
@@ -161,7 +166,7 @@ const ChatPage = ({ setFullLoadingHandler }) => {
                     52,
                     24
                   )}
-                  src={selectedStudent.avatar}
+                  src={selectedStudent.profilePicture}
                 />
                 {/* <div
                   className={`is-active-page ${

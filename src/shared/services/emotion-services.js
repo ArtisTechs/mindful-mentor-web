@@ -1,13 +1,13 @@
 import axios from "axios";
 import { API_URL } from "../enum";
-import { STORAGE_KEY } from "../keys";
+import { getTokenAsync } from "./global-services";
 
 const moodURL = `${API_URL.BASE_URL}${API_URL.MOODS}`;
-const storedToken = localStorage.getItem(STORAGE_KEY.TOKEN);
 
 // Add a new mood
 export const addMood = async (moodDetails) => {
   try {
+    const storedToken = await getTokenAsync();
     const response = await axios.post(`${moodURL}${API_URL.ADD}`, moodDetails, {
       headers: {
         "Content-Type": "application/json",
@@ -23,6 +23,7 @@ export const addMood = async (moodDetails) => {
 // Get moods with filters
 export const getMoods = async (filters) => {
   try {
+    const storedToken = await getTokenAsync();
     const {
       userId,
       moodCode,
@@ -53,6 +54,7 @@ export const getMoods = async (filters) => {
 // Update mood by ID
 export const updateMoodById = async (id, moodDetails) => {
   try {
+    const storedToken = await getTokenAsync();
     const response = await axios.put(
       `${moodURL}${API_URL.UPDATE}/${id}`,
       moodDetails,
@@ -72,11 +74,13 @@ export const updateMoodById = async (id, moodDetails) => {
 // Get students with mood today
 export const getStudentsWithMoodToday = async (filters) => {
   try {
+    const storedToken = await getTokenAsync();
     const {
-      sortBy = "firstName", // Default sort by firstName
+      sortBy = "lastName", // Default sort by firstName
       sortAscending = true, // Default sorting order is ascending
       page = 0, // Default page number
       size = null, // Default page size
+      ignorePagination = false, // Default page size
     } = filters;
 
     const response = await axios.get(
@@ -87,6 +91,7 @@ export const getStudentsWithMoodToday = async (filters) => {
           sortAscending,
           page,
           size,
+          ignorePagination,
         },
         headers: {
           "Content-Type": "application/json",

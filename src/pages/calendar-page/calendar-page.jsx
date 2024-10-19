@@ -70,6 +70,7 @@ const CalendarPage = ({ setFullLoadingHandler }) => {
 
       const response = await fetchStudentList({
         status: AccountStatusEnum.ACTIVE,
+        ignorePagination: true,
       });
       setStudents(response.content);
     } catch (error) {
@@ -120,6 +121,7 @@ const CalendarPage = ({ setFullLoadingHandler }) => {
             hideEmotion={true}
             hideOptions={true}
             isItemClickable={true}
+            isGetLatestStudent={true}
             loading={loading}
             onSelectStudent={handleSelectStudent}
             isSelectedStudent={selectedStudent}

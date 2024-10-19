@@ -10,7 +10,6 @@ import {
   stringAvatar,
   toastService,
   createAppointment,
-  fetchStudentList,
   fetchCounselorList,
   AccountStatusEnum,
 } from "../../shared";

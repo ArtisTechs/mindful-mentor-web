@@ -214,13 +214,13 @@ const StudentList = ({
                     size === "full" ? 42 : size === "half" ? 32 : 24,
                     size === "full" ? 20 : size === "half" ? 16 : 12
                   )}
-                  src={student.avatar}
+                  src={student.profilePicture}
                 />
                 <div className={`student-labels-${size}`}>
                   <span className={`student-name ms-3 student-name-${size}`}>
                     {student.lastName}, {student.firstName}
                   </span>
-                  {student.email && isRequest && size === "full" && (
+                  {student.email && size === "full" && (
                     <span className="student-list-subtitle ms-3">
                       {student.email}
                     </span>
@@ -231,6 +231,11 @@ const StudentList = ({
                     </span>
                   )}
                 </div>
+                {student?.Messages?.length > 0 && (
+                  <div className="student-message-count">
+                    {student?.Messages?.length}
+                  </div>
+                )}
               </div>
 
               {!hideOptions && !isRequest && (

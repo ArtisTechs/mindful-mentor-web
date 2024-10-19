@@ -18,9 +18,10 @@ const ChatWindow = ({ setFullLoadingHandler }) => {
   const { currentUserDetails } = useGlobalContext(); // Destructure currentUserDetails from context
   const [messages, setMessages] = useState([]); // Start with an empty message array
   const [inputValue, setInputValue] = useState("");
+  const [newMessageCount, setNewMessageCount] = useState(0);
   const chatBodyRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [counselorDetails, setCounselorDetails] = useState(null); // Initialize with null
+  const [counselorDetails, setCounselorDetails] = useState(null);
 
   // Fetch counselor details when the current user changes
   useEffect(() => {
@@ -55,6 +56,11 @@ const ChatWindow = ({ setFullLoadingHandler }) => {
 
       // WebSocket message handler to receive messages
       const handleReceivedMessage = (message) => {
+        if (message.senderId === receiverId) {
+          setNewMessageCount((prevCount) => prevCount + 1);
+        } else {
+          setNewMessageCount(0);
+        }
         setMessages((prevMessages) => {
           const updatedMessages = [...prevMessages, message];
           return updatedMessages;
@@ -156,7 +162,7 @@ const ChatWindow = ({ setFullLoadingHandler }) => {
                   40,
                   18
                 )}
-                src={counselorDetails?.avatar}
+                src={counselorDetails.profilePicture}
               />
             )}
             {/* <div
@@ -187,7 +193,10 @@ const ChatWindow = ({ setFullLoadingHandler }) => {
               </div>
             ))
           ) : (
-            <p className="mb-0">No messages yet. Start the conversation!</p>
+            <p className="mb-0 chat-bubble counselor">
+              No messages yet. Feel free to reach out to your counselor — start
+              the conversation anytime!
+            </p>
           )}
         </div>
         <div className="chat-footer">
@@ -218,6 +227,10 @@ const ChatWindow = ({ setFullLoadingHandler }) => {
         rootClose
       >
         <button className="chat-head gradient-background shadow">
+          {newMessageCount > 0 && (
+            <div className="messages-count">{newMessageCount}</div>
+          )}
+
           <i className="far fa-message"></i>
         </button>
       </OverlayTrigger>

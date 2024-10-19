@@ -12,6 +12,9 @@ import {
   toastService,
   saveUserProfile,
   removeEmptyFields,
+  ESuccessMessages,
+  modalService,
+  uploadProfilePicture,
 } from "../../shared";
 import { useGlobalContext } from "../../shared/context";
 
@@ -44,13 +47,17 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
+        setFullLoadingHandler(true);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
         const userId = student ? student.id : currentUserDetails.id;
         const userDetails = await getUserDetails(userId);
-        console.log(userDetails);
         setProfile(userDetails);
         setFormData(userDetails);
       } catch (error) {
         toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+      } finally {
+        setFullLoadingHandler(false);
       }
     };
 
@@ -65,7 +72,6 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    setFullLoadingHandler(true);
 
     let formIsValid = true;
     let newErrors = {};
@@ -133,26 +139,37 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
     }
 
     const filteredFormData = removeEmptyFields(formData);
-    console.log(filteredFormData);
 
-    setTimeout(async () => {
-      try {
-        await saveUserProfile(profile.id, filteredFormData);
-        setProfile((prev) => ({
-          ...prev,
-          ...filteredFormData,
-        }));
-        setIsEditing(false);
-        setFullLoadingHandler(false);
+    modalService.show({
+      title: "Update Profile?",
+      message: `Are you sure you want to update profile details?`,
+      onConfirm: async () => {
+        setFullLoadingHandler(true);
+        setTimeout(async () => {
+          try {
+            await saveUserProfile(profile.id, filteredFormData);
+            setProfile((prev) => ({
+              ...prev,
+              ...filteredFormData,
+            }));
+            setIsEditing(false);
+            setFullLoadingHandler(false);
 
-        if (currentUserDetails.id === filteredFormData.id) {
-          setCurrentUserDetails(filteredFormData);
-        }
-      } catch (error) {
-        toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
-        setFullLoadingHandler(false);
-      }
-    }, 500);
+            if (currentUserDetails.id === filteredFormData.id) {
+              setCurrentUserDetails(filteredFormData);
+            }
+
+            toastService.show(ESuccessMessages.UPDATE_PROFILE, "success-toast");
+          } catch (error) {
+            toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
+            setFullLoadingHandler(false);
+          }
+        }, 500);
+      },
+      onCancel: () => {
+        // Optionally handle cancel action
+      },
+    });
   };
 
   const handleEditClick = () => {
@@ -176,21 +193,27 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
     setShowPassword((prev) => !prev);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
-      // Ensure it's an image file
       const fileURL = URL.createObjectURL(file);
-      setTempProfilePicture(fileURL); // Display the selected image (optional, for preview)
+      setTempProfilePicture(fileURL);
 
-      // Save the file directly into the form data
-      setFormData((prev) => ({
-        ...prev,
-        profilePicture: file, // Save the file object instead of URL
-      }));
-      console.log(file);
+      try {
+        setFullLoadingHandler(true);
+        const uploadedImageUrl = await uploadProfilePicture(file);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        setFormData((prev) => ({
+          ...prev,
+          profilePicture: uploadedImageUrl,
+        }));
+      } catch (error) {
+        // console.error("Error uploading the profile picture:", error);
+      } finally {
+        setFullLoadingHandler(false);
+      }
     } else {
-      // If the file is not a valid image, reset the input field
       toastService.show(EErrorMessages.PICTURE_UPLOAD_FAILED, "danger-toast");
     }
   };
@@ -215,7 +238,7 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
               )}
               src={
                 isEditing && formData.profilePicture
-                  ? tempProfilePicture
+                  ? tempProfilePicture || profile.profilePicture
                   : profile.profilePicture
               }
             />
@@ -378,6 +401,12 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
               )}
 
               <div className="button-container">
+                <button
+                  className="secondary-button shadow"
+                  onClick={handleEditClick}
+                >
+                  Cancel
+                </button>
                 <button type="submit" className="white-button shadow">
                   Save
                 </button>

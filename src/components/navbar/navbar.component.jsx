@@ -52,6 +52,7 @@ const Navbar = ({ title, toggleOffCanvas, onLogout, profile }) => {
                 16
               )}
               alt={`${profile.firstName} ${profile.lastName}`}
+              src={profile.profilePicture}
             />
           </button>
 

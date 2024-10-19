@@ -1,10 +1,8 @@
 import axios from "axios";
 import { API_URL, RoleEnum } from "../enum";
-import { STORAGE_KEY } from "../keys";
-import { capitalizeText } from "./global-services";
+import { capitalizeText, getTokenAsync } from "./global-services";
 
 const usersURL = `${API_URL.BASE_URL}${API_URL.USERS}`;
-const storedToken = localStorage.getItem(STORAGE_KEY.TOKEN);
 
 export const userSignIn = async (userDetails) => {
   try {
@@ -32,6 +30,7 @@ export const userSignUp = async (userDetails) => {
 
 export const getUserDetails = async (userId) => {
   try {
+    const storedToken = await getTokenAsync();
     const response = await axios.get(
       `${usersURL}${API_URL.PROFILE}/${userId}`,
       {
@@ -49,6 +48,7 @@ export const getUserDetails = async (userId) => {
 // Adjusted function for updating user profile with file upload
 export const saveUserProfile = async (userId, profileData) => {
   try {
+    const storedToken = await getTokenAsync();
     const formData = new FormData();
 
     // Append profile data fields with the correct structure
@@ -59,14 +59,7 @@ export const saveUserProfile = async (userId, profileData) => {
     formData.append("password", profileData.password || "");
     formData.append("phoneNumber", profileData.phoneNumber || "");
     formData.append("studentNumber", profileData.studentNumber);
-
-    // Append file (if exists)
-    if (
-      profileData.profilePicture &&
-      profileData.profilePicture instanceof File
-    ) {
-      formData.append("file", profileData.profilePicture); // 'file' is the key expected by the backend
-    }
+    formData.append("profilePicture", profileData.profilePicture);
 
     // Perform the PUT request with FormData
     const response = await axios.put(
@@ -91,20 +84,21 @@ export const fetchStudentList = async ({
   status = "",
   searchName = "",
   page = 0,
-  size = null,
   sortBy = "lastName",
   sortDirection = "ASC",
+  ignorePagination = false,
 }) => {
   try {
+    const storedToken = await getTokenAsync();
     const response = await axios.get(`${usersURL}${API_URL.LIST}`, {
       params: {
         status,
         role: RoleEnum.STUDENT,
         searchName,
         page,
-        size,
         sortBy,
         sortDirection,
+        ignorePagination,
       },
       headers: {
         ...(storedToken ? { Authorization: `Bearer ${storedToken}` } : {}),
@@ -118,6 +112,7 @@ export const fetchStudentList = async ({
 
 export const changeUserStatus = async (id, status) => {
   try {
+    const storedToken = await getTokenAsync();
     const response = await axios.post(`${usersURL}${API_URL.STATUS}`, null, {
       params: { id, status },
       headers: {
@@ -132,6 +127,7 @@ export const changeUserStatus = async (id, status) => {
 
 export const deleteUser = async (userId) => {
   try {
+    const storedToken = await getTokenAsync();
     const response = await axios.delete(
       `${usersURL}${API_URL.DELETE}/${userId}`,
       {
@@ -155,6 +151,7 @@ export const fetchCounselorList = async ({
   sortDirection = "ASC",
 }) => {
   try {
+    const storedToken = await getTokenAsync();
     const response = await axios.get(`${usersURL}${API_URL.LIST}`, {
       params: {
         status,
@@ -171,6 +168,42 @@ export const fetchCounselorList = async ({
     });
     return response.data;
   } catch (error) {
+    throw error.response;
+  }
+};
+
+// Load Cloudinary credentials from the environment variables
+const CLOUDINARY_URL =
+  "https://api.cloudinary.com/v1_1/" +
+  process.env.REACT_APP_CLOUDINARY_CLOUD_NAME +
+  "/image/upload";
+const CLOUDINARY_UPLOAD_PRESET = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
+
+// Function for uploading a profile picture to Cloudinary
+export const uploadProfilePicture = async (profilePicture) => {
+  try {
+    const formData = new FormData();
+
+    // Append the profile picture file
+    if (profilePicture && profilePicture instanceof File) {
+      formData.append("file", profilePicture);
+      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+    }
+
+    // Make a POST request to Cloudinary
+    const response = await axios.post(CLOUDINARY_URL, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    // Get the URL of the uploaded image from the response
+    const imageUrl = response.data.secure_url;
+
+    // Return the image URL (you can use it to update the user's profile)
+    return imageUrl;
+  } catch (error) {
+    console.error("Error uploading profile picture:", error);
     throw error.response;
   }
 };

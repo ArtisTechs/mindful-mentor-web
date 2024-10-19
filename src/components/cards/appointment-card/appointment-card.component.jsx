@@ -56,7 +56,7 @@ const AppointmentCard = ({
 
       {status !== AppointmentStatusEnum.APPROVED && (
         <div className="button-container">
-          <button className="secondary-button" onClick={onReject}>
+          <button className="danger-button" onClick={onReject}>
             Reject
           </button>
           <button className="primary-button" onClick={onApprove}>

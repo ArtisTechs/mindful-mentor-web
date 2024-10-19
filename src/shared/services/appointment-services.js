@@ -1,9 +1,8 @@
 import axios from "axios";
 import { API_URL } from "../enum";
-import { STORAGE_KEY } from "../keys";
+import { getTokenAsync } from "./global-services";
 
 const appointmentsURL = `${API_URL.BASE_URL}${API_URL.APPOINTMENTS}`;
-const storedToken = localStorage.getItem(STORAGE_KEY.TOKEN);
 
 // Fetch appointment list with filters, pagination, and sorting
 export const fetchAppointmentList = async ({
@@ -17,6 +16,7 @@ export const fetchAppointmentList = async ({
   sortDirection = "ASC",
 }) => {
   try {
+    const storedToken = await getTokenAsync();
     const response = await axios.get(`${appointmentsURL}`, {
       params: {
         userId,
@@ -41,6 +41,7 @@ export const fetchAppointmentList = async ({
 // Change appointment status
 export const changeAppointmentStatus = async (id, statusUpdateDTO) => {
   try {
+    const storedToken = await getTokenAsync();
     const response = await axios.put(
       `${appointmentsURL}${API_URL.STATUS}/${id}`,
       statusUpdateDTO,
@@ -59,6 +60,7 @@ export const changeAppointmentStatus = async (id, statusUpdateDTO) => {
 // Create a new appointment
 export const createAppointment = async (appointmentDTO) => {
   try {
+    const storedToken = await getTokenAsync();
     const response = await axios.post(
       `${appointmentsURL}/create`,
       appointmentDTO,
@@ -77,6 +79,7 @@ export const createAppointment = async (appointmentDTO) => {
 // Delete an appointment
 export const deleteAppointment = async (id) => {
   try {
+    const storedToken = await getTokenAsync();
     const response = await axios.delete(`${appointmentsURL}/${id}`, {
       headers: {
         ...(storedToken ? { Authorization: `Bearer ${storedToken}` } : {}),

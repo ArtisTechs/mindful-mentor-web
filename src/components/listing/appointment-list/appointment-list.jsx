@@ -40,7 +40,6 @@ const AppointmentCardList = ({ appointments, isLoading, refetch }) => {
       },
       onCancel: () => {
         // Optionally handle cancel action
-        console.log("Approval cancelled");
       },
     });
   };

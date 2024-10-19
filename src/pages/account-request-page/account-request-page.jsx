@@ -32,6 +32,7 @@ const AccountRequestPage = () => {
       const response = await fetchStudentList({
         searchName: debouncedSearchTerm || undefined,
         status: AccountStatusEnum.REGISTERED,
+        ignorePagination: true,
       });
       setStudents(response.content);
     } catch (error) {

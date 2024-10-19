@@ -40,8 +40,13 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   // Get user details and admin status from context
-  const { currentUserDetails, setCurrentUserDetails, setIsAppAdmin } =
-    useGlobalContext();
+  const {
+    currentUserDetails,
+    setCurrentUserDetails,
+    setIsAppAdmin,
+    setAdminMessages,
+    setIsMessagesFetch,
+  } = useGlobalContext();
 
   // State for confirmation modal
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -129,6 +134,7 @@ function App() {
     localStorage.setItem(STORAGE_KEY.PROFILE_ID, profileData.id);
     localStorage.setItem(STORAGE_KEY.ROLE, profileData.role);
     localStorage.setItem(STORAGE_KEY.TOKEN, profileData.token);
+    console.log(profileData.token);
     setCurrentUserDetails(profileData);
     setLoggedIn(true);
     setIsAppAdmin(profileData.role === RoleEnum.COUNSELOR);
@@ -140,6 +146,8 @@ function App() {
     setCurrentUserDetails(null);
     setLoggedIn(false);
     setIsAppAdmin(false);
+    setAdminMessages([]);
+    setIsMessagesFetch(false);
   };
 
   // Confirm modal actions

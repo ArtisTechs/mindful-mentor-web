@@ -63,9 +63,9 @@ const HomePage = ({ setFullLoadingHandler }) => {
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       const response = await getStudentsWithMoodToday({
-        sortBy: "firstName",
+        sortBy: "lastName",
+        ignorePagination: true,
       });
-      console.log(response);
       setStudents(response);
     } catch (error) {
       toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");

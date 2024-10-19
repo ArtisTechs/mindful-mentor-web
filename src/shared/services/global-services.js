@@ -1,3 +1,16 @@
+import { STORAGE_KEY } from "../keys";
+
+export const getTokenAsync = () => {
+  return new Promise((resolve) => {
+    const token = localStorage.getItem(STORAGE_KEY.TOKEN);
+    if (token) {
+      resolve(token);
+    } else {
+      resolve(null); // No token, resolve as null
+    }
+  });
+};
+
 export const validateEmail = (email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
@@ -122,4 +135,25 @@ export const capitalizeText = (text) => {
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
+};
+
+export const sortByLatestDateOrLastName = (combinedData) => {
+  return combinedData.sort((a, b) => {
+    const dateA = a.latestDate ? new Date(a.latestDate) : null;
+    const dateB = b.latestDate ? new Date(b.latestDate) : null;
+
+    if (dateA && dateB) {
+      return dateB - dateA;
+    }
+
+    if (dateA && !dateB) return -1;
+    if (!dateA && dateB) return 1;
+
+    const lastNameA = a.lastName.toLowerCase();
+    const lastNameB = b.lastName.toLowerCase();
+    if (lastNameA < lastNameB) return -1;
+    if (lastNameA > lastNameB) return 1;
+
+    return 0;
+  });
 };
