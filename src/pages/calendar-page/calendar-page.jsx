@@ -44,7 +44,6 @@ const CalendarPage = ({ setFullLoadingHandler }) => {
           };
 
           const data = await getMoods(filters);
-          console.log("Mood data fetched:", data);
           setMoodsData(data);
         } catch (error) {
           toastService.show(EErrorMessages.CONTACT_ADMIN, "danger-toast");
@@ -96,11 +95,6 @@ const CalendarPage = ({ setFullLoadingHandler }) => {
           startDate: formattedStartDate,
           endDate: formattedEndDate,
         });
-        console.log(
-          "Selected date range:",
-          formattedStartDate,
-          formattedEndDate
-        );
       }
     },
     [dateRange]
@@ -108,7 +102,6 @@ const CalendarPage = ({ setFullLoadingHandler }) => {
 
   const handleSelectStudent = (student) => {
     setSelectedStudent(student);
-    console.log("Selected student:", selectedStudent);
   };
 
   return (

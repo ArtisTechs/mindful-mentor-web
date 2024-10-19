@@ -134,7 +134,6 @@ function App() {
     localStorage.setItem(STORAGE_KEY.PROFILE_ID, profileData.id);
     localStorage.setItem(STORAGE_KEY.ROLE, profileData.role);
     localStorage.setItem(STORAGE_KEY.TOKEN, profileData.token);
-    console.log(profileData.token);
     setCurrentUserDetails(profileData);
     setLoggedIn(true);
     setIsAppAdmin(profileData.role === RoleEnum.COUNSELOR);
