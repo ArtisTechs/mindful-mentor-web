@@ -23,5 +23,6 @@
 @media (max-width: 880px) {
   .home-page-cards {
     flex-direction: column;
+    align-items: center;
   }
 }

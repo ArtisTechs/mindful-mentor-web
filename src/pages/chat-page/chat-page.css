@@ -125,5 +125,6 @@
   }
   .chat-window-page {
     margin-left: 0;
+    min-width: 350px;
   }
 }

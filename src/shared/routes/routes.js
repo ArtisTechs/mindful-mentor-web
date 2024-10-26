@@ -11,4 +11,5 @@ export const ROUTES = {
   STUDENTS: "/students",
   CHATS: "/chats",
   ACCOUNT_REQUEST: "/accountRequest",
+  JOURNAL: "/journal",
 };

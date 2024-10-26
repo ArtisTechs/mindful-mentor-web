@@ -2,7 +2,12 @@ import React, { useRef } from "react";
 import { InputGroup, FormControl } from "react-bootstrap";
 import "./date-picker.component.css";
 
-const DatePicker = ({ selectedDate, handleDateChange, minDate }) => {
+const DatePicker = ({
+  selectedDate,
+  handleDateChange,
+  minDate,
+  errorMessage,
+}) => {
   const dateInputRef = useRef(null);
 
   const handleInputClick = () => {
@@ -27,6 +32,7 @@ const DatePicker = ({ selectedDate, handleDateChange, minDate }) => {
           style={{ cursor: "pointer" }}
         />
       </InputGroup>
+      {errorMessage && <div className="text-danger">{errorMessage}</div>}
     </div>
   );
 };

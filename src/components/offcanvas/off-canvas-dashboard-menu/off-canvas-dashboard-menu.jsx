@@ -119,6 +119,22 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                 </li>
               </>
             )}
+            {!isAppAdmin && (
+              <>
+                <li>
+                  <Button
+                    className={`dashbaord-menu-item ${isActive(
+                      `${ROUTES.WEB}${ROUTES.JOURNAL}`
+                    )}`}
+                    onClick={() =>
+                      handleNavigation(`${ROUTES.WEB}${ROUTES.JOURNAL}`)
+                    }
+                  >
+                    Journal
+                  </Button>
+                </li>
+              </>
+            )}
           </ul>
         </OffcanvasBody>
       </Offcanvas>
