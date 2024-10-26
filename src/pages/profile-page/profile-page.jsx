@@ -29,6 +29,7 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
   });
 
   const [tempProfilePicture, setTempProfilePicture] = useState(null);
+  const [originalProfilePicture] = useState(profile.profilePicture);
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(profile);
@@ -218,6 +219,16 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
     }
   };
 
+  const handleClearProfileClick = () => {
+    if (isEditing) {
+      setTempProfilePicture(null);
+      setFormData((prev) => ({
+        ...prev,
+        profilePicture: null,
+      }));
+    }
+  };
+
   const renderError = (field) => {
     return isEditing && errors[field] ? (
       <div className="text-danger error-input-text">{errors[field]}</div>
@@ -237,24 +248,37 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
                 42
               )}
               src={
-                isEditing && formData.profilePicture
-                  ? tempProfilePicture || profile.profilePicture
+                isEditing
+                  ? tempProfilePicture || formData.profilePicture
                   : profile.profilePicture
               }
             />
             {isEditing && (
-              <div className="change-profile-icon">
-                <input
-                  type="file"
-                  id="avatar-upload"
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  onChange={handleFileChange}
-                />
-                <label htmlFor="avatar-upload" className="avatar-upload-label">
-                  <i className="fas fa-camera"></i>
-                </label>
-              </div>
+              <>
+                <div className="change-profile-icon">
+                  <input
+                    type="file"
+                    id="avatar-upload"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
+                  <label
+                    htmlFor="avatar-upload"
+                    className="avatar-upload-label"
+                  >
+                    <i className="fas fa-file-image"></i>
+                  </label>
+                </div>
+                {formData.profilePicture &&
+                  formData.profilePicture !== "undefined" && (
+                    <div className="clear-profile-icon">
+                      <button onClick={handleClearProfileClick}>
+                        <i className="fas fa-circle-xmark"></i>
+                      </button>
+                    </div>
+                  )}
+              </>
             )}
           </div>
           <button className="edit-profile-button" onClick={handleEditClick}>

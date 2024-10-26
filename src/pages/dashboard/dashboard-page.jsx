@@ -89,6 +89,8 @@ const DashboardPage = ({ onLogout, setFullLoadingHandler }) => {
       [`${ROUTES.WEB}${ROUTES.CALENDAR}`]: "Calendar",
       [`${ROUTES.WEB}${ROUTES.APPOINTMENTS}`]: "Appointments",
       [`${ROUTES.WEB}${ROUTES.STUDENTS}`]: "Students",
+      [`${ROUTES.WEB}${ROUTES.CHATS}`]: "Chats",
+      [`${ROUTES.WEB}${ROUTES.ACCOUNT_REQUEST}`]: "Account Request",
       [`${ROUTES.WEB}${ROUTES.JOURNAL}`]: "My Journal",
     };
 

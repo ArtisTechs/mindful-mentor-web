@@ -8,6 +8,7 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import "./off-canvas-dashboard-menu.css";
 import { ROUTES, useGlobalContext } from "../../../shared";
+import logo from "../../../assets/img/mindful-mentor-logo.png";
 
 const OffCanvasDashboardMenu = ({ show, handleClose }) => {
   const { currentUserDetails, isAppAdmin } = useGlobalContext();
@@ -31,7 +32,9 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
         onHide={handleClose}
         placement="start"
       >
-        <OffcanvasHeader>
+        <OffcanvasHeader className="offcanvas-menu-header">
+          <img src={logo} alt="logo" className="menu-logo" />
+          <h1 className="menu-app-title">Mindful Mentor</h1>
           <button className="arrow-close-btn" onClick={handleClose}>
             <i className="bi bi-arrow-left"></i>
           </button>

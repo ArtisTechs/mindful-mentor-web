@@ -26,11 +26,13 @@ const JournalPage = ({ setFullLoadingHandler }) => {
     message: "",
     entryDate: "",
   });
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [isViewing, setIsViewing] = useState(false);
+  const [originalFormState, setOriginalFormState] = useState(null); // Added to store original state
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
   );
+  const [originalSelectedDate, setOriginalSelectedDate] = useState(""); // Added to store original selected date
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isViewing, setIsViewing] = useState(false);
   const [errors, setErrors] = useState({
     title: "",
     message: "",
@@ -104,7 +106,7 @@ const JournalPage = ({ setFullLoadingHandler }) => {
           entryDate: selectedDate,
         });
         toastService.show(
-          `Journal titled: "${formState.title}" sucessfully updated.`,
+          `Journal titled: "${formState.title}" successfully updated.`,
           "success-toast"
         );
       } else {
@@ -113,7 +115,7 @@ const JournalPage = ({ setFullLoadingHandler }) => {
           entryDate: selectedDate,
         });
         toastService.show(
-          `Journal titled: "${formState.title}" sucessfully created.`,
+          `Journal titled: "${formState.title}" successfully created.`,
           "success-toast"
         );
       }
@@ -169,6 +171,8 @@ const JournalPage = ({ setFullLoadingHandler }) => {
   };
 
   const handleEdit = (journal) => {
+    setOriginalFormState(journal);
+    setOriginalSelectedDate(journal.entryDate.substring(0, 10));
     setFormState({
       id: journal.id,
       title: journal.title,
@@ -189,7 +193,7 @@ const JournalPage = ({ setFullLoadingHandler }) => {
           setFullLoadingHandler(true);
           await deleteJournal(journal.id);
           toastService.show(
-            `Journal ${journal.title} sucessfully deleted.`,
+            `Journal ${journal.title} successfully deleted.`,
             "success-toast"
           );
         } catch (error) {
@@ -197,9 +201,6 @@ const JournalPage = ({ setFullLoadingHandler }) => {
         } finally {
           loadJournals();
         }
-      },
-      onCancel: () => {
-        // console.log("Approval cancelled");
       },
       confirmText: "Delete",
       confirmButtonClass: "danger-button",
@@ -215,6 +216,10 @@ const JournalPage = ({ setFullLoadingHandler }) => {
   };
 
   const handleCancelClicked = () => {
+    if (isUpdating) {
+      setFormState(originalFormState);
+      setSelectedDate(originalSelectedDate);
+    }
     setIsViewing(true);
     setIsUpdating(false);
   };
