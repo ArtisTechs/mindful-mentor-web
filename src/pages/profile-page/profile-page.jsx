@@ -15,6 +15,7 @@ import {
   ESuccessMessages,
   modalService,
   uploadProfilePicture,
+  validatePassword,
 } from "../../shared";
 import { useGlobalContext } from "../../shared/context";
 
@@ -128,6 +129,13 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
         formIsValid = false;
       } else if (!validatePhoneNumber(formData.phoneNumber)) {
         newErrors.phoneNumber = EErrorMessages.PHONE_NUMBER_INVALID;
+        formIsValid = false;
+      }
+    }
+    if (formData.password) {
+      const passwordError = validatePassword(formData.password);
+      if (passwordError) {
+        newErrors.password = passwordError;
         formIsValid = false;
       }
     }
@@ -394,35 +402,36 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
                 {renderError("phoneNumber")}
               </div>
 
-              {isViewSelf && (
-                <>
-                  <div className="form-floating mb-3 position-relative">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      className="form-control primary-input"
-                      id="password"
-                      name="password"
-                      placeholder="Password"
-                      value={formData.password || ""}
-                      onChange={handleInputChange}
-                      maxLength={64}
-                    />
-                    <label htmlFor="password">Password</label>
-                    <button
-                      type="button"
-                      className="btn position-absolute end-0 top-0 mt-2 me-2"
-                      onClick={togglePasswordVisibility}
-                    >
-                      <i
-                        className={`bi ${
-                          showPassword ? "bi-eye-slash" : "bi-eye"
-                        }`}
-                      ></i>
-                    </button>
-                    {renderError("password")}
-                  </div>
-                </>
-              )}
+              {isViewSelf ||
+                (isAppAdmin && (
+                  <>
+                    <div className="form-floating mb-3 position-relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        className="form-control primary-input"
+                        id="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password || ""}
+                        onChange={handleInputChange}
+                        maxLength={64}
+                      />
+                      <label htmlFor="password">Password</label>
+                      <button
+                        type="button"
+                        className="btn position-absolute end-0 top-0 mt-2 me-2"
+                        onClick={togglePasswordVisibility}
+                      >
+                        <i
+                          className={`bi ${
+                            showPassword ? "bi-eye-slash" : "bi-eye"
+                          }`}
+                        ></i>
+                      </button>
+                      {renderError("password")}
+                    </div>
+                  </>
+                ))}
 
               <div className="button-container">
                 <button
