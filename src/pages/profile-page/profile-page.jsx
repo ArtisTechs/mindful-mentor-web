@@ -464,14 +464,6 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
             )}
             <h1 className="text-label">Phone Number</h1>
             <p className="text-value">{profile.phoneNumber || "N/A"}</p>
-            {((isAppAdmin && student) || (!isAppAdmin && isViewSelf)) && (
-              <>
-                <h1 className="text-label text-capitalize">Counselor</h1>
-                <p className="text-value">
-                  {profile.counselor ? profile.counselor : "N/A"}
-                </p>
-              </>
-            )}
           </div>
         )}
       </div>
