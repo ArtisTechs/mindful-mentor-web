@@ -378,15 +378,17 @@ const JournalPage = ({ setFullLoadingHandler }) => {
                 )}
               </div>
               <div className="button-container">
-                <button
-                  type="button"
-                  className="secondary-button shadow"
-                  onClick={() => {
-                    handleCancelClicked();
-                  }}
-                >
-                  Cancel
-                </button>
+                {isUpdating && (
+                  <button
+                    type="button"
+                    className="secondary-button shadow"
+                    onClick={() => {
+                      handleCancelClicked();
+                    }}
+                  >
+                    Cancel
+                  </button>
+                )}
                 <button type="submit" className="white-button shadow">
                   {isUpdating ? "Update" : "Save"}
                 </button>

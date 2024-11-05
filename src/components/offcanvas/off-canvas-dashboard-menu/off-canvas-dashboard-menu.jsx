@@ -50,6 +50,7 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                   handleNavigation(`${ROUTES.WEB}${ROUTES.DASHBOARD}`)
                 }
               >
+                <i className="fas fa-table-columns"></i>
                 Dashboard
               </Button>
             </li>
@@ -64,6 +65,7 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                       handleNavigation(`${ROUTES.WEB}${ROUTES.CHATS}`)
                     }
                   >
+                    <i className="fas fa-comment"></i>
                     Chats
                   </Button>
                 </li>
@@ -76,6 +78,7 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                       handleNavigation(`${ROUTES.WEB}${ROUTES.STUDENTS}`)
                     }
                   >
+                    <i className="fas fa-graduation-cap"></i>
                     Students
                   </Button>
                 </li>
@@ -90,6 +93,7 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                   handleNavigation(`${ROUTES.WEB}${ROUTES.CALENDAR}`)
                 }
               >
+                <i className="far fa-calendar"></i>
                 Calendar
               </Button>
             </li>
@@ -103,6 +107,7 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                   handleNavigation(`${ROUTES.WEB}${ROUTES.APPOINTMENTS}`)
                 }
               >
+                <i className="far fa-calendar-check"></i>
                 Appointment
               </Button>
             </li>
@@ -117,6 +122,7 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                       handleNavigation(`${ROUTES.WEB}${ROUTES.ACCOUNT_REQUEST}`)
                     }
                   >
+                    <i className="fas fa-user-plus"></i>
                     Account Request
                   </Button>
                 </li>
@@ -133,6 +139,7 @@ const OffCanvasDashboardMenu = ({ show, handleClose }) => {
                       handleNavigation(`${ROUTES.WEB}${ROUTES.JOURNAL}`)
                     }
                   >
+                    <i className="fas fa-book"></i>
                     Journal
                   </Button>
                 </li>
