@@ -96,7 +96,9 @@ const AppointmentCardList = ({ appointments, isLoading, refetch }) => {
           {renderSkeletonLoader()}
         </div>
       ) : !appointments || appointments.length === 0 ? (
-        <p>No appointments available.</p>
+        <div className="w-100 h-100 d-flex justify-content-center align-items-center">
+          <p>No appointments available.</p>
+        </div>
       ) : (
         appointments.map((appointment, index) => {
           const student = appointment.user;

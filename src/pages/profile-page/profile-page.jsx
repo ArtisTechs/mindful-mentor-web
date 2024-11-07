@@ -15,6 +15,7 @@ import {
   ESuccessMessages,
   modalService,
   uploadProfilePicture,
+  validatePassword,
 } from "../../shared";
 import { useGlobalContext } from "../../shared/context";
 
@@ -29,6 +30,7 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
   });
 
   const [tempProfilePicture, setTempProfilePicture] = useState(null);
+  const [originalProfilePicture] = useState(profile.profilePicture);
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(profile);
@@ -130,6 +132,13 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
         formIsValid = false;
       }
     }
+    if (formData.password) {
+      const passwordError = validatePassword(formData.password);
+      if (passwordError) {
+        newErrors.password = passwordError;
+        formIsValid = false;
+      }
+    }
 
     setErrors(newErrors);
 
@@ -218,6 +227,16 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
     }
   };
 
+  const handleClearProfileClick = () => {
+    if (isEditing) {
+      setTempProfilePicture(null);
+      setFormData((prev) => ({
+        ...prev,
+        profilePicture: null,
+      }));
+    }
+  };
+
   const renderError = (field) => {
     return isEditing && errors[field] ? (
       <div className="text-danger error-input-text">{errors[field]}</div>
@@ -237,24 +256,37 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
                 42
               )}
               src={
-                isEditing && formData.profilePicture
-                  ? tempProfilePicture || profile.profilePicture
+                isEditing
+                  ? tempProfilePicture || formData.profilePicture
                   : profile.profilePicture
               }
             />
             {isEditing && (
-              <div className="change-profile-icon">
-                <input
-                  type="file"
-                  id="avatar-upload"
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  onChange={handleFileChange}
-                />
-                <label htmlFor="avatar-upload" className="avatar-upload-label">
-                  <i className="fas fa-camera"></i>
-                </label>
-              </div>
+              <>
+                <div className="change-profile-icon">
+                  <input
+                    type="file"
+                    id="avatar-upload"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
+                  <label
+                    htmlFor="avatar-upload"
+                    className="avatar-upload-label"
+                  >
+                    <i className="fas fa-file-image"></i>
+                  </label>
+                </div>
+                {formData.profilePicture &&
+                  formData.profilePicture !== "undefined" && (
+                    <div className="clear-profile-icon">
+                      <button onClick={handleClearProfileClick}>
+                        <i className="fas fa-circle-xmark"></i>
+                      </button>
+                    </div>
+                  )}
+              </>
             )}
           </div>
           <button className="edit-profile-button" onClick={handleEditClick}>
@@ -370,35 +402,36 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
                 {renderError("phoneNumber")}
               </div>
 
-              {isViewSelf && (
-                <>
-                  <div className="form-floating mb-3 position-relative">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      className="form-control primary-input"
-                      id="password"
-                      name="password"
-                      placeholder="Password"
-                      value={formData.password || ""}
-                      onChange={handleInputChange}
-                      maxLength={64}
-                    />
-                    <label htmlFor="password">Password</label>
-                    <button
-                      type="button"
-                      className="btn position-absolute end-0 top-0 mt-2 me-2"
-                      onClick={togglePasswordVisibility}
-                    >
-                      <i
-                        className={`bi ${
-                          showPassword ? "bi-eye-slash" : "bi-eye"
-                        }`}
-                      ></i>
-                    </button>
-                    {renderError("password")}
-                  </div>
-                </>
-              )}
+              {isViewSelf ||
+                (isAppAdmin && (
+                  <>
+                    <div className="form-floating mb-3 position-relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        className="form-control primary-input"
+                        id="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password || ""}
+                        onChange={handleInputChange}
+                        maxLength={64}
+                      />
+                      <label htmlFor="password">Password</label>
+                      <button
+                        type="button"
+                        className="btn position-absolute end-0 top-0 mt-2 me-2"
+                        onClick={togglePasswordVisibility}
+                      >
+                        <i
+                          className={`bi ${
+                            showPassword ? "bi-eye-slash" : "bi-eye"
+                          }`}
+                        ></i>
+                      </button>
+                      {renderError("password")}
+                    </div>
+                  </>
+                ))}
 
               <div className="button-container">
                 <button
@@ -431,14 +464,6 @@ const ProfilePage = ({ setFullLoadingHandler }) => {
             )}
             <h1 className="text-label">Phone Number</h1>
             <p className="text-value">{profile.phoneNumber || "N/A"}</p>
-            {((isAppAdmin && student) || (!isAppAdmin && isViewSelf)) && (
-              <>
-                <h1 className="text-label text-capitalize">Counselor</h1>
-                <p className="text-value">
-                  {profile.counselor ? profile.counselor : "N/A"}
-                </p>
-              </>
-            )}
           </div>
         )}
       </div>

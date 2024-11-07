@@ -39,9 +39,29 @@
   border: none;
 }
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .navbar-center {
-    flex-grow: 0;
+.navbar-app-logo-title {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  left: 4rem;
+  width: 100px;
+}
+
+.navbar-app-logo-title img {
+  height: 40px;
+  height: 40px;
+  border-radius: 20px;
+  margin-left: 10px;
+}
+
+.navbar-app-logo-title h1 {
+  font-size: 18px;
+  color: white;
+  margin: 0 10px;
+}
+
+@media (max-width: 700px) {
+  .navbar-app-logo-title {
+    visibility: hidden;
   }
 }

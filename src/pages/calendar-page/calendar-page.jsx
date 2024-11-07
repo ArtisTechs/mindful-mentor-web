@@ -82,9 +82,23 @@ const CalendarPage = ({ setFullLoadingHandler }) => {
   // Memoize the onDateRangeChange function to avoid unnecessary re-renders
   const onDateRangeChange = useCallback(
     (startDate, endDate) => {
-      // Format the start and end date once
-      const formattedStartDate = formatDate(startDate, DateFormat.YYYY_MM_DD);
-      const formattedEndDate = formatDate(endDate, DateFormat.YYYY_MM_DD);
+      const adjustedStartDate = new Date(startDate);
+      const adjustedEndDate = new Date(endDate);
+
+      // Subtract 1 day from startDate
+      adjustedStartDate.setDate(adjustedStartDate.getDate() - 1);
+      // Add 1 day to endDate
+      adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
+
+      // Format the adjusted dates
+      const formattedStartDate = formatDate(
+        adjustedStartDate,
+        DateFormat.YYYY_MM_DD
+      );
+      const formattedEndDate = formatDate(
+        adjustedEndDate,
+        DateFormat.YYYY_MM_DD
+      );
 
       // Only update the date range if it's different from the current one
       if (

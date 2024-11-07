@@ -194,4 +194,16 @@
     bottom: 90px;
     right: 20px;
   }
+  .messages-count {
+    right: 1rem;
+    bottom: 8rem;
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-height: 560px) {
+  .chat-window {
+    height: 300px;
+  }
 }

@@ -1,8 +1,8 @@
 export const API_URL = Object.freeze({
-  // MAIN_URL: "//localhost:8080",
-  // BASE_URL: "http://localhost:8080/api", //local
-  MAIN_URL: "//mindful-mentor-back-end-production.up.railway.app",
-  BASE_URL: "https://mindful-mentor-back-end-production.up.railway.app/api", // Change this in production
+  MAIN_URL: "//localhost:8080",
+  BASE_URL: "http://localhost:8080/api", //local
+  // MAIN_URL: "//mindful-mentor-back-end-production.up.railway.app",
+  // BASE_URL: "https://mindful-mentor-back-end-production.up.railway.app/api", // Change this in production
   USERS: "/users",
   USER: "/user",
   LOGIN: "/login",
@@ -23,4 +23,5 @@ export const API_URL = Object.freeze({
   MESSAGES: "/messages",
   RECEIVER: "/receiver",
   STUDENT_MOOD_TODAY: "/students-with-mood-today",
+  JOURNALS: "/journals",
 });

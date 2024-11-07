@@ -69,12 +69,28 @@
   cursor: pointer;
 }
 
+.clear-profile-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  color: white;
+  position: absolute;
+  top: 90%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
 .change-profile-icon .avatar-upload-label {
   cursor: pointer;
 }
 
 @media (max-width: 480px) {
   .profile-container {
-    width: 300px;
+    width: 350px;
   }
 }

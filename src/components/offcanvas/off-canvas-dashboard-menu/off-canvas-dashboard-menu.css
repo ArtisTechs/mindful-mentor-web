@@ -7,9 +7,6 @@
   border: none;
   font-size: 2rem;
   cursor: pointer;
-  position: absolute;
-  right: 20px;
-  top: 10px;
   color: var(--secondary-color); /* Adjust this color as needed */
 }
 
@@ -25,6 +22,13 @@
   color: black;
   background-color: var(--primary-color);
   border: none;
+  display: flex;
+  align-items: center;
+}
+
+.dashbaord-menu-item i {
+  font-size: 20px;
+  margin-right: 1rem;
 }
 
 .dashbaord-menu-item:hover,
@@ -34,4 +38,22 @@
   color: white !important;
   background-color: var(--dark-primary-color) !important;
   font-weight: bold !important;
+}
+
+.offcanvas-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu-logo {
+  height: 50px;
+  width: 50px;
+  margin-left: 10px;
+}
+
+.menu-app-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
 }

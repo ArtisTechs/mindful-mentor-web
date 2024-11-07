@@ -202,7 +202,7 @@ const StudentList = ({
               key={student.id}
               className={`student-card student-card-${size} ${
                 selectedStudent?.id === student.id ? "selected-student" : ""
-              }`}
+              } ${isRequest ? "request-card" : null}`}
               onClick={() => handleItemClick(student)}
               style={{ cursor: isItemClickable ? "pointer" : "default" }}
             >
@@ -334,7 +334,9 @@ const StudentList = ({
             </div>
           ))
         ) : (
-          <span>No students to display</span>
+          <div className="w-100 h-100 d-flex justify-content-center align-items-center">
+            <p>No students to display</p>
+          </div>
         )}
       </div>
     </div>

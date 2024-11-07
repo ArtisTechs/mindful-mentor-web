@@ -19,6 +19,7 @@ import ChatWindow from "../../components/chat-window/chat-window.component";
 import StudentListPage from "../student-list-page/student-list-page";
 import ChatPage from "../chat-page/chat-page";
 import AccountRequestPage from "../account-request-page/account-request-page";
+import JournalPage from "../journal-page/journal-page";
 
 const DashboardPage = ({ onLogout, setFullLoadingHandler }) => {
   const {
@@ -81,7 +82,6 @@ const DashboardPage = ({ onLogout, setFullLoadingHandler }) => {
     }
   };
 
-
   useEffect(() => {
     const routeTitles = {
       [`${ROUTES.WEB}${ROUTES.DASHBOARD}`]: "Dashboard",
@@ -89,6 +89,9 @@ const DashboardPage = ({ onLogout, setFullLoadingHandler }) => {
       [`${ROUTES.WEB}${ROUTES.CALENDAR}`]: "Calendar",
       [`${ROUTES.WEB}${ROUTES.APPOINTMENTS}`]: "Appointments",
       [`${ROUTES.WEB}${ROUTES.STUDENTS}`]: "Students",
+      [`${ROUTES.WEB}${ROUTES.CHATS}`]: "Chats",
+      [`${ROUTES.WEB}${ROUTES.ACCOUNT_REQUEST}`]: "Account Request",
+      [`${ROUTES.WEB}${ROUTES.JOURNAL}`]: "My Journal",
     };
 
     setPageTitle(routeTitles[location.pathname] || "Dashboard");
@@ -145,6 +148,16 @@ const DashboardPage = ({ onLogout, setFullLoadingHandler }) => {
               <Route
                 path={ROUTES.ACCOUNT_REQUEST}
                 element={<AccountRequestPage />}
+              />
+            </>
+          )}
+          {!isAppAdmin && (
+            <>
+              <Route
+                path={ROUTES.JOURNAL}
+                element={
+                  <JournalPage setFullLoadingHandler={setFullLoadingHandler} />
+                }
               />
             </>
           )}

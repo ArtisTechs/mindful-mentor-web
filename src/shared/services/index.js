@@ -6,3 +6,4 @@ export * from "./appointment-services.js";
 export * from "./date-services.js";
 export * from "./emotion-services.js";
 export * from "./messages-services.js";
+export * from "./journal-services.js";
