@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/mindful-mentor-web/static/css/main.cd1ca25b.css",
-    "main.js": "/mindful-mentor-web/static/js/main.fa6032ab.js",
+    "main.js": "/mindful-mentor-web/static/js/main.a9f3d833.js",
     "static/js/453.1ec439f4.chunk.js": "/mindful-mentor-web/static/js/453.1ec439f4.chunk.js",
     "static/media/carousel-4.png": "/mindful-mentor-web/static/media/carousel-4.0a4a9c23488289663593.png",
     "static/media/carousel-1.png": "/mindful-mentor-web/static/media/carousel-1.598fd5aa72752f50e313.png",
@@ -26,11 +26,11 @@
     "static/media/fa-v4compatibility.woff2": "/mindful-mentor-web/static/media/fa-v4compatibility.6cfec8414be20e2c3426.woff2",
     "index.html": "/mindful-mentor-web/index.html",
     "main.cd1ca25b.css.map": "/mindful-mentor-web/static/css/main.cd1ca25b.css.map",
-    "main.fa6032ab.js.map": "/mindful-mentor-web/static/js/main.fa6032ab.js.map",
+    "main.a9f3d833.js.map": "/mindful-mentor-web/static/js/main.a9f3d833.js.map",
     "453.1ec439f4.chunk.js.map": "/mindful-mentor-web/static/js/453.1ec439f4.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.cd1ca25b.css",
-    "static/js/main.fa6032ab.js"
+    "static/js/main.a9f3d833.js"
   ]
 }
