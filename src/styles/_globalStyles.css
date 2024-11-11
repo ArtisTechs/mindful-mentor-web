@@ -51,6 +51,16 @@
   text-transform: capitalize;
 }
 
+.logo-medium {
+  width: 65px;
+  height: 65px;
+  background-image: url("../assets/img/mindful-mentor-logo.png");
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
 .logo-large {
   width: 100px;
   height: 100px;

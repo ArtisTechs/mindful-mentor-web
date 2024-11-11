@@ -23,7 +23,6 @@ const Navbar = ({ title, toggleOffCanvas, onLogout, profile }) => {
   return (
     <nav className="navbar gradient-background shadow-black">
       <div className="navbar-app-logo-title">
-        <img src={logo} alt="logo" />
         <h1>Mindful Mentor</h1>
       </div>
       <div className="navbar-left">
