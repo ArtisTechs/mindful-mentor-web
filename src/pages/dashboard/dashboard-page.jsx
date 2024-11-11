@@ -168,6 +168,15 @@ const DashboardPage = ({ onLogout, setFullLoadingHandler }) => {
         <ChatWindow setFullLoadingHandler={setFullLoadingHandler} />
       )}
 
+      {location.pathname !== `${ROUTES.WEB}${ROUTES.DASHBOARD}` && (
+        <button
+          className="home-button-dashboard gradient-background"
+          onClick={() => navigate(`${ROUTES.WEB}${ROUTES.DASHBOARD}`)}
+        >
+          <i className="fas fa-home"></i>
+        </button>
+      )}
+
       {isAppAdmin &&
         location.pathname === `${ROUTES.WEB}${ROUTES.DASHBOARD}` && (
           <button

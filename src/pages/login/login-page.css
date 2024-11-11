@@ -12,6 +12,11 @@
   margin-right: 3rem;
 }
 
+.login-title {
+  display: flex;
+  align-items: center;
+}
+
 .get-started-title {
   display: flex;
   flex-direction: column;

@@ -251,7 +251,6 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
     <div className="login-page">
       <div className="get-started-container">
         <div className="get-started-title">
-          <div className="logo-large mb-3"></div>
           <h1 className="gradient-color-text">Mindful Mentor</h1>
         </div>
         <div className="get-started-body">
@@ -261,6 +260,7 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
 
       <div className="login-form d-flex flex-column">
         <div className="login-title mb-3">
+          <div className="logo-medium me-3"></div>
           <h1 className="primary-color fw-bold">
             {isSignUp
               ? formStep === 1
