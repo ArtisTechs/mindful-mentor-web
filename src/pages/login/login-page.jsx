@@ -443,6 +443,11 @@ const LoginPage = ({ setFullLoadingHandler, onLoginSuccess }) => {
                   </div>
                 )}
               </div>
+              <p className="text-muted">
+                Password must include at least 8 characters, one uppercase
+                letter, one lowercase letter, one number, and one special
+                character.
+              </p>
             </>
           )}
 
