@@ -51,6 +51,13 @@
   text-transform: capitalize;
 }
 
+.text-muted {
+  font-size: 0.85rem;
+  color: #6c757d; /* Light gray */
+  margin-top: 4px;
+  margin-bottom: 15px;
+}
+
 .logo-medium {
   width: 65px;
   height: 65px;
