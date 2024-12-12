@@ -20,7 +20,7 @@
   align-items: start;
 }
 
-@media (max-width: 880px) {
+@media (max-width: 1560px) {
   .home-page-cards {
     flex-direction: column;
     align-items: center;
