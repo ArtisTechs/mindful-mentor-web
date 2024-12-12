@@ -11,6 +11,7 @@ import {
   toastService,
   useGlobalContext,
 } from "../../shared";
+import BarGraphEmotion from "../../components/bar-graph-emotion/bar-graph-emotion";
 
 const HomePage = ({ setFullLoadingHandler }) => {
   const { currentUserDetails, isAppAdmin } = useGlobalContext();
@@ -84,12 +85,16 @@ const HomePage = ({ setFullLoadingHandler }) => {
 
       <div className="home-page-cards">
         {isAppAdmin && (
-          <StudentList
-            students={students}
-            size="half"
-            loading={studentLoading}
-            hideDelete={true}
-          />
+          <>
+            <BarGraphEmotion students={students} />
+            <StudentList
+              students={students}
+              size="half"
+              loading={studentLoading}
+              hideDelete={true}
+              showEmotionFilter={true}
+            />
+          </>
         )}
 
         <UpcomingEvents

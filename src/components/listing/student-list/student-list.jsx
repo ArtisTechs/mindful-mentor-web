@@ -11,34 +11,9 @@ import {
   toastService,
   modalService,
   deleteUser,
+  getEmotionImage,
 } from "../../../shared";
-import JoyfulImage from "../../../assets/img/Joyful.png";
-import MotivatedImage from "../../../assets/img/Motivated.png";
-import CalmImage from "../../../assets/img/Calm.png";
-import AnxiousImage from "../../../assets/img/Anxious.png";
-import SadImage from "../../../assets/img/Sad.png";
-import FrustratedImage from "../../../assets/img/Frustrated.png";
-import logo from "../../../assets/img/mindful-mentor-logo.png";
 import { useNavigate } from "react-router-dom";
-
-const getEmotionImage = (code) => {
-  switch (code) {
-    case emotionCode.JOY.code:
-      return JoyfulImage;
-    case emotionCode.MOTIVATED.code:
-      return MotivatedImage;
-    case emotionCode.CALM.code:
-      return CalmImage;
-    case emotionCode.ANXIOUS.code:
-      return AnxiousImage;
-    case emotionCode.SAD.code:
-      return SadImage;
-    case emotionCode.FRUSTRATED.code:
-      return FrustratedImage;
-    default:
-      return logo;
-  }
-};
 
 const StudentList = ({
   students,
@@ -54,12 +29,14 @@ const StudentList = ({
   isSelectedStudent,
   isRequest = false,
   refetch,
+  showEmotionFilter = false,
 }) => {
   const [selectedStudent, setSelectedStudent] = useState(
     isSelectedStudent || null
   );
   const hasInitialized = useRef(false);
   const navigate = useNavigate();
+  const [filteredEmotion, setFilteredEmotion] = useState(null);
 
   useEffect(() => {
     if (
@@ -78,6 +55,14 @@ const StudentList = ({
       hasInitialized.current = true;
     }
   }, [isGetLatestStudent, onSelectStudent, students]);
+
+   const handleFilterClick = (code) => {
+     setFilteredEmotion((prev) => (prev === code ? null : code)); // Toggle filter
+   };
+
+  const filteredStudents = filteredEmotion
+    ? students.filter((student) => student.moodCode === filteredEmotion)
+    : students;
 
   const handleItemClick = (student) => {
     if (isItemClickable && onSelectStudent) {
@@ -165,6 +150,40 @@ const StudentList = ({
         </>
       )}
 
+      {showEmotionFilter && ( // Show filter dynamically
+        <div className="emotion-filter-icons">
+          {Object.values(emotionCode).map((emotion) => (
+            <div
+              key={emotion.code}
+              className={`emotion-icon ${
+                filteredEmotion === emotion.code ? "selected-emotion" : ""
+              }`}
+              onClick={() => handleFilterClick(emotion.code)}
+              style={{
+                cursor: "pointer",
+                padding: "8px",
+                borderRadius: "50%",
+                backgroundColor:
+                  filteredEmotion === emotion.code ? "#e0f7fa" : "transparent",
+              }}
+            >
+              <img
+                src={getEmotionImage(emotion.code)}
+                alt={emotion.displayName}
+                title={emotion.displayName}
+                className="emotion-filter-icons-img"
+                style={{
+                  filter:
+                    filteredEmotion === emotion.code
+                      ? "none"
+                      : "grayscale(100%)",
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="student-list">
         {loading ? (
           <>
@@ -196,8 +215,8 @@ const StudentList = ({
               </div>
             ))}
           </>
-        ) : students && students.length > 0 ? (
-          students.map((student) => (
+        ) : filteredStudents && filteredStudents.length > 0 ? (
+          filteredStudents.map((student) => (
             <div
               key={student.id}
               className={`student-card student-card-${size} ${
