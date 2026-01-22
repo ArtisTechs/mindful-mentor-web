@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./shared";
-import "@fortawesome/fontawesome-free/css/all.min.css";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import { GlobalStateProvider } from "./shared/context";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
